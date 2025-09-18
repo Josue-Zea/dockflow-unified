@@ -1,0 +1,16 @@
+Presentación del proyecto
+Patrón de software del sistema
+Arquitectura de hardware
+Despliegue de la aplicación (Colocar puertos y tecnologías)
+Base de datos del sistema
+Descripción de esquema no relacional en el sistema (Colocar tercera columna quitada antes)
+Roles dentro del sistema
+Permisos dentro del sistema
+Herramientas de software
+Librerias administradas por node
+Librerias administradas por Angular
+Imagenes administradas por docker
+Tecnologías utilizadas
+Herramientas utilizadas durante el desarrollo
+Despliegue
+Pruebas

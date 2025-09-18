@@ -1,0 +1,23 @@
+.selector-kind-filter {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.error-container { 
+    text-align: center;
+    padding: 20px; 
+    border-radius: 5px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+} 
+  
+h1 { 
+    font-size: 5rem; 
+    color: #1100d0; 
+} 
+  
+p { 
+    font-size: 1.5rem; 
+    color: #333; 
+    margin-bottom: 20px; 
+} 

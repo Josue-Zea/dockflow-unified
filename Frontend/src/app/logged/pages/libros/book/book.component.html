@@ -1,0 +1,62 @@
+<div class="principal-div">
+    <div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Libro</span></div>
+                <div class="header-value"><span>{{libro.libro}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Folio</span></div>
+                <div class="header-value"><span>{{libro.folio}}</span></div>
+            </div>
+        </div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Fecha de registro</span></div>
+                <div class="header-value"><span>{{libro.fecha}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Usuario que registro</span></div>
+                <div class="header-value"><span>{{libro.usuario}}</span></div>
+            </div>
+        </div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Tipo</span></div>
+                <div class="header-value"><span>{{libro.tipo}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Estado</span></div>
+                <div class="header-value"><span>{{libro.estado}}</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div class="buttons-pdf">
+            <p-button (click)="addZoom()" icon="pi pi-search-plus" [rounded]="true" [text]="true"></p-button>
+            <p-button (click)="substractZoom()" icon="pi pi-search-minus" [rounded]="true" [text]="true"></p-button>
+            <p-button icon="pi pi-print" [rounded]="true" [text]="true"></p-button>
+            <p-button icon="pi pi-download" [rounded]="true" [text]="true"></p-button>
+            <span style="margin-left: 5px;">Pagina {{ currentPage }} de {{ totalPages }}</span>
+        </div>
+        <div>
+            <p-button [style]="{'margin-right': '10px'}" (onClick)="getBack()" label="Volver" icon="pi pi-arrow-left"></p-button>
+            <span>Buscar en documento: </span>
+            <input type="text" pInputText [(ngModel)]="textSeach" (keyup.enter)="search()"/>
+        </div>
+    </div>
+    <div class="background-pdf-viewer">
+        <pdf-viewer id="pdf-viewer"
+            [src]="pdfSrc"
+            [render-text]="true"
+            [original-size]="false"
+            [(page)]="currentPage" [fit-to-page]="true"
+            [show-all]="true"
+            [zoom-scale]="'page-width'"
+            [zoom]="zoom"
+            style="width: 100%; height: 100vh"
+            (pages-initialized)="pageInitialized($event)"
+        ></pdf-viewer>
+    </div>
+</div>

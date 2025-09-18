@@ -1,0 +1,1 @@
+INSERT INTO evisor.subtipoexpediente (Id, Nombre) values (uuid(), 'Modificación');

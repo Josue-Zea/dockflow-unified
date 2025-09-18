@@ -1,0 +1,159 @@
+<div class="principal-div">
+    <div class="title">
+        <span>
+            Filtrar expedientes
+        </span>
+    </div>
+
+    <!-- AÑO -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="year" value="Anio" inputId="anioLabel"
+            [binary]="true"></p-checkbox>
+        <label for="anioLabel"> Año</label>
+        <div *ngIf="year" class="filters">
+            <div class="number" style="margin-right: 50px;">
+                <label for="number1" class="margins">Año del expediente </label>
+                <p-calendar [(ngModel)]="specificYear" view="year" dateFormat="yy" inputId="yearpicker"></p-calendar>
+            </div>
+        </div>
+    </div>
+
+    <!-- NÚMERO DE EXPEDIENTE -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="number" value="Número de expediente" inputId="numberLabel"
+            [binary]="true"></p-checkbox>
+        <label for="numberLabel"> Número de expediente</label>
+        <div *ngIf="number" class="filters">
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="numero" [(ngModel)]="filterSelectedNumber" inputId="number1"></p-radioButton>
+                <label for="number1" class="margins">Número</label>
+                <input type="text" pInputText placeholder="Número" [(ngModel)]="specificNumber" [disabled]="filterSelectedNumber!=='numero'"/>
+            </div>
+            <div class="number">
+                <p-radioButton value="rango" [(ngModel)]="filterSelectedNumber" inputId="number2"></p-radioButton>
+                <label for="number2" class="margins"> Rango</label>
+                <input type="text" pInputText placeholder="Mínimo" [(ngModel)]="minimumNumber" [disabled]="filterSelectedNumber!=='rango'"/>
+                <input type="text" pInputText placeholder="Máximo" [(ngModel)]="maximumNumber" [disabled]="filterSelectedNumber!=='rango'"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- NÚMERO DE TRÁMITE -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="process" value="Número de trámite" inputId="processLabelId"
+            [binary]="true"></p-checkbox>
+        <label for="processLabelId"> Número de trámite</label>
+        <div *ngIf="process" class="filters">
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="numeroProceso" [(ngModel)]="filterSelectedProcess" inputId="process1"></p-radioButton>
+                <label for="process1" class="margins">Número</label>
+                <input type="text" pInputText [(ngModel)]="specificProcess" [disabled]="filterSelectedProcess!=='numeroProceso'"/>
+            </div>
+            <div class="number">
+                <p-radioButton value="rangoProceso" [(ngModel)]="filterSelectedProcess" inputId="process2"></p-radioButton>
+                <label for="process2" class="margins"> Rango</label>
+                <input type="text" pInputText placeholder="Mínimo" [(ngModel)]="minimumProcess" [disabled]="filterSelectedProcess!=='rangoProceso'"/>
+                <input type="text" pInputText placeholder="Máximo" [(ngModel)]="maximumProcess" [disabled]="filterSelectedProcess!=='rangoProceso'"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- USUARIO QUE REGISTRO EL EXPEDIENTE -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="userSelect" value="Usuario" inputId="operatorLabel"
+            [binary]="true"></p-checkbox>
+        <label for="operatorLabel"> Usuario que registro el expediente</label>
+        <div *ngIf="userSelect" class="filters operations">
+            <div style="margin-right: 10px;">
+                Usuario que registro el expediente:
+            </div>
+            <p-dropdown [options]="userSelectOptions" [(ngModel)]="userSelectSelected" placeholder="Operador">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <!-- TIPO -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="kind" value="Tipo" inputId="kindLabel"
+            [binary]="true"></p-checkbox>
+        <label for="kindLabel"> Tipo</label>
+        <div *ngIf="kind" class="filters operations">
+            <div style="margin-right: 10px;">
+                Tipo del expediente:
+            </div>
+            <p-dropdown [options]="kindsOptions" [(ngModel)]="kindSelected" placeholder="Documento">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <!-- SUBTIPO -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="subKind" value="Documento" inputId="documentLabel"
+            [binary]="true"></p-checkbox>
+        <label for="documentLabel"> Subtipo</label>
+        <div *ngIf="subKind" class="filters operations">
+            <div style="margin-right: 10px;">
+                Subtipo del expediente:
+            </div>
+            <p-dropdown [options]="subKindOptions" [(ngModel)]="subKindSelected" placeholder="Documento">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <!-- FECHA DE REGISTRO DEL EXPEDIENTE -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="dateRegister" value="Fecha" inputId="dateRegister" [binary]="true"></p-checkbox>
+        <label for="dateRegister"> Fecha de registro del expediente</label>
+        <div *ngIf="dateRegister" class="filters operations">
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="especificaRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister1"></p-radioButton>
+                <label for="dateRegister1" class="margins">Fecha específica</label>
+                <p-calendar [(ngModel)]="specificDateRegister" [disabled]="filterSelectedDateRegister!=='especificaRegistro'"></p-calendar>
+            </div>
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="rangoRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister2"></p-radioButton>
+                <label for="dateRegister2" class="margins">Rango de fechas</label>
+                <span class="p-input-icon-right" style="color: black">
+                    <i class="pi pi-calendar-times"></i>
+                    <p-calendar [(ngModel)]="rangeDatesRegister" selectionMode="range" [readonlyInput]="true" [disabled]="filterSelectedDateRegister!=='rangoRegistro'"></p-calendar>
+                </span>
+            </div>
+            <div class="number">
+                <p-radioButton value="mesRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister3"></p-radioButton>
+                <label for="dateRegister3" class="margins">Por mes</label>
+                <p-calendar [(ngModel)]="monthDateRegister" view="month" dateFormat="mm/yy" [readonlyInput]="true" [disabled]="filterSelectedDateRegister!=='mesRegistro'"></p-calendar>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="statusSelect" value="Estado" inputId="statusLabel"
+            [binary]="true"></p-checkbox>
+        <label for="statusLabel"> Estado del expediente</label>
+        <div *ngIf="statusSelect" class="filters operations">
+            <div style="margin-right: 10px;">
+                Estado:
+            </div>
+            <p-dropdown [options]="statusSelectOptions" [(ngModel)]="statusSelectSelected" placeholder="Estado">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="options-limit">
+        <div class="limit">
+            <h4 style="margin-right: 10px;">
+                Limitar resultados:
+            </h4>
+            <p-dropdown [options]="limitOptions" [(ngModel)]="limitSelected" placeholder="Todos">
+            </p-dropdown>
+            <div *ngIf="limitSelected === 'Específico'" class="limit" style="margin-left: 20px;">
+                <h4 style="margin-right: 10px;">Limitar a: </h4>
+                <input pInputText pKeyFilter="int" placeholder="0" [(ngModel)]="specificLimit" />
+            </div>
+        </div>
+        <div>
+            <p-button (onClick)="filtrar()" label="Filtrar"></p-button>
+        </div>
+    </div>
+</div>

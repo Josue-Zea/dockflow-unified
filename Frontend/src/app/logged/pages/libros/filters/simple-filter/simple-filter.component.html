@@ -1,0 +1,21 @@
+<div class="form-simple">
+    <p-card header="Filtrado de libro" subheader="Libro y folio específicos" >
+        <div class="form-input">
+            <span>
+                Número de folio:
+            </span>
+            <input type="text" pInputText [(ngModel)]="folio" [style]="{ marginLeft: '10px' }"/>
+        </div>
+        <div class="form-input">
+            <span>
+                Número de libro:
+            </span>
+            <input type="text" pInputText [(ngModel)]="libro" [style]="{ marginLeft: '10px' }"/>
+        </div>
+        <ng-template pTemplate="footer">
+            <div style="display: flex; justify-content: center;">
+                <p-button (onClick)="filtrar()" label="Filtrar" icon="pi pi-check"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

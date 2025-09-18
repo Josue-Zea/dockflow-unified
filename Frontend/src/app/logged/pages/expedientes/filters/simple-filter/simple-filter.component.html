@@ -1,0 +1,27 @@
+<div class="form-simple">
+    <p-card header="Filtrado de expediente" subheader="Expediente específico">
+        <div class="form-input">
+            <span>
+                Número de expediente:
+            </span>
+            <input
+                [class.ng-invalid]="isError"
+                [class.ng-dirty]="isError"
+                type="text"
+                pInputText
+                [(ngModel)]="number"
+                [style]="{ marginLeft: '10px' }"
+            />
+        </div>
+        <ng-template pTemplate="footer">
+            <div style="display: flex; justify-content: center;">
+                <ng-container *ngIf="isLoading; else buttonTemplate">
+                    <div class="lds-dual-ring"></div>
+                </ng-container>
+                <ng-template #buttonTemplate>
+                    <p-button (onClick)="filtrar()" label="Filtrar" icon="pi pi-check" [disabled]="isLoading"></p-button>
+                </ng-template>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

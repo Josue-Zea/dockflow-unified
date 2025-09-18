@@ -1,0 +1,104 @@
+<div class="principal-div">
+    <div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Número</span></div>
+                <div class="header-value"><span>{{expediente.numero}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Año</span></div>
+                <div class="header-value"><span>{{expediente.anio}}</span></div>
+            </div>
+        </div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Número de trámite</span></div>
+                <div class="header-value"><span>{{expediente.numeroTramite}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Fecha de registro</span></div>
+                <div class="header-value"><span>{{expediente.fecha}}</span></div>
+            </div>
+        </div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Usuario que registro</span></div>
+                <div class="header-value"><span>{{expediente.usuario}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Tipo</span></div>
+                <div class="header-value"><span>{{expediente.tipo}}</span></div>
+            </div>
+        </div>
+        <div class="row-header">
+            <div class="header">
+                <div class="header-title"><span>Subtipo</span></div>
+                <div class="header-value"><span>{{expediente.subtipo}}</span></div>
+            </div>
+            <div class="header">
+                <div class="header-title"><span>Estado</span></div>
+                <div class="header-value"><span>{{expediente.estado}}</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div class="buttons-pdf">
+            <p-button (click)="addZoom()" icon="pi pi-search-plus" [rounded]="true" [text]="true"></p-button>
+            <p-button (click)="substractZoom()" icon="pi pi-search-minus" [rounded]="true" [text]="true"></p-button>
+            <p-button
+                *ngIf="user?.permisoExpedientes === 2 || user?.permisoExpedientes === 3"
+                (click)="printPDF()"
+                icon="pi pi-print"
+                [rounded]="true"
+                [text]="true"
+            ></p-button>
+            <span style="margin-left: 5px;">Pagina {{ currentPage }} de {{ totalPages }}</span>
+        </div>
+        <div>
+            <p-button [style]="{'margin-right': '10px'}" (onClick)="getBack()" label="Volver" icon="pi pi-arrow-left"></p-button>
+            <span>Buscar en documento: </span>
+            <input type="text" pInputText [(ngModel)]="textSeach" (keyup.enter)="search()"/>
+        </div>
+    </div>
+    <div class="background-pdf-viewer">
+        <pdf-viewer id="pdf-viewer"
+            [src]="pdfSrc"
+            [render-text]="true"
+            [original-size]="true"
+            [(page)]="currentPage" [fit-to-page]="true"
+            [show-all]="true"
+            [zoom-scale]="'page-width'"
+            [zoom]="zoom"
+            (after-load-complete)="onLoaded($event)"
+            style="width: 100%; height: 700px;"
+            (pages-initialized)="pageInitialized($event)"
+        ></pdf-viewer>
+    </div>
+
+    <div
+        style="margin-top: 20px; margin-bottom: 20px; font-size: 20px; font-weight: bold; text-align: center; color: white;"
+        *ngIf="tramitesConPdf?.length"
+    >
+        Tramites adjuntos del expediente
+    </div>
+    
+    <div *ngIf="tramitesConPdf?.length">
+        <div></div>
+        <ng-container *ngFor="let tramite of tramitesConPdf">
+          <div class="background-pdf-viewer">
+            <pdf-viewer id="pdf-viewer"
+              [src]="tramite.pdfSrc"
+              [render-text]="true"
+              [original-size]="true"
+              [fit-to-page]="true"
+              [show-all]="true"
+              [zoom-scale]="'page-width'"
+              (after-load-complete)="onLoaded($event)"
+              (pages-initialized)="pageInitialized($event)"
+              style="width: 100%; height: 700px;">
+            </pdf-viewer>
+          </div>
+        </ng-container>
+    </div>
+</div>

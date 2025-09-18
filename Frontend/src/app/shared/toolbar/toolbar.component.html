@@ -1,0 +1,27 @@
+<p-toolbar class="toolbar_shared">
+    <div class="p-toolbar-group-start">
+        <p-button
+            (click)="setSidebarVisible()"
+            icon="pi pi-bars"
+            [rounded]="true"
+            [outlined]="true"
+            [text]="true"
+            [style]="{ 'color': 'white'}"
+        ></p-button>
+    </div>
+    <div class="p-toolbar-group-end">
+        <h5 [style]="{'color': 'white'}">
+            {{userName}}
+        </h5>
+        <p-button
+            #btn type="button"
+            icon="pi pi-user"
+            [rounded]="true"
+            [outlined]="true"
+            [text]="true"
+            [style]="{ 'color': 'white'}"
+            (click)="menu.toggle($event)"
+        ></p-button>
+        <p-tieredMenu #menu [model]="items" [popup]="true"></p-tieredMenu>
+    </div>
+</p-toolbar>

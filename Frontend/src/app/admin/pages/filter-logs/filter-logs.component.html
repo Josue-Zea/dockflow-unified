@@ -1,0 +1,69 @@
+<div class="principal-div">
+    <div class="title">
+        <h1>
+            Historial de registros en el sistema
+        </h1>
+    </div>
+
+    <!-- FECHAS -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="dateRegister" value="Fecha" inputId="dateRegister" [binary]="true"></p-checkbox>
+        <label for="dateRegister"> Filtrar por fechas</label>
+        <div *ngIf="dateRegister" class="filters operations">
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="especificaRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister1"></p-radioButton>
+                <label for="dateRegister1" class="margins">Fecha específica</label>
+                <p-calendar [(ngModel)]="specificDateRegister" [disabled]="filterSelectedDateRegister!=='especificaRegistro'"></p-calendar>
+            </div>
+            <div class="number" style="margin-right: 50px;">
+                <p-radioButton value="rangoRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister2"></p-radioButton>
+                <label for="dateRegister2" class="margins">Rango de fechas</label>
+                <span class="p-input-icon-right" style="color: black">
+                    <i class="pi pi-calendar-times"></i>
+                    <p-calendar [(ngModel)]="rangeDatesRegister" selectionMode="range" [readonlyInput]="true" [disabled]="filterSelectedDateRegister!=='rangoRegistro'"></p-calendar>
+                </span>
+            </div>
+            <div class="number">
+                <p-radioButton value="mesRegistro" [(ngModel)]="filterSelectedDateRegister" inputId="dateRegister3"></p-radioButton>
+                <label for="dateRegister3" class="margins">Por mes</label>
+                <p-calendar [(ngModel)]="monthDateRegister" view="month" dateFormat="mm/yy" [readonlyInput]="true" [disabled]="filterSelectedDateRegister!=='mesRegistro'"></p-calendar>
+            </div>
+        </div>
+    </div>
+
+    <!-- USUARIO QUE REGISTRO EL EXPEDIENTE -->
+    <div class="container-filter">
+        <p-checkbox name="filters" [(ngModel)]="userSelect" value="Usuario" inputId="operatorLabel"
+            [binary]="true"></p-checkbox>
+        <label for="operatorLabel"> Filtrar por usuario</label>
+        <div *ngIf="userSelect" class="filters operations">
+            <div style="margin-right: 10px;">
+                Usuario:
+            </div>
+            <p-dropdown
+                [options]="userSelectOptions"
+                [(ngModel)]="userSelectSelected"
+                placeholder="Operador"
+                optionLabel="nombre"
+            >
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="options-limit">
+        <div class="limit">
+            <h4 style="margin-right: 10px;">
+                Limitar resultados:
+            </h4>
+            <p-dropdown [options]="limitOptions" [(ngModel)]="limitSelected" placeholder="Todos">
+            </p-dropdown>
+            <div *ngIf="limitSelected === 'Específico'" class="limit" style="margin-left: 20px;">
+                <h4 style="margin-right: 10px;">Limitar a: </h4>
+                <input pInputText pKeyFilter="int" placeholder="0" [(ngModel)]="specificLimit" />
+            </div>
+        </div>
+        <div>
+            <p-button (onClick)="filtrar()" label="Filtrar"></p-button>
+        </div>
+    </div>
+</div>

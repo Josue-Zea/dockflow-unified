@@ -1,0 +1,9 @@
+<app-toolbar
+    [(sidebarVisible)]="sidebarVisible"
+    [items]="items"
+></app-toolbar>
+<app-sidebar
+    [(sidebarVisible)]="sidebarVisible"
+    [optionsSidebar]="optionsSidebar"
+></app-sidebar>
+<router-outlet></router-outlet>

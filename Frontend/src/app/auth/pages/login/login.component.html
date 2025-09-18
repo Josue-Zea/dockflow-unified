@@ -1,0 +1,46 @@
+<div class="principal-div">
+    <div class="box-form">
+        <div class="left">
+            <!-- Para cambiar la imagen de fondo del login modificar la imagen en el asset -->
+            <div class="overlay" style='background-image: url("../../../../assets/background-login.jpg");'>
+                <p-image
+                    src="../../../../assets/EVISOR.png"
+                    alt="LogoEvisor"
+                    width="250">
+                </p-image>
+            </div>
+        </div>
+    
+        <form class="right">
+            <div class="title-ingresar">
+                <h5>Ingresar</h5>
+            </div>
+            <div>
+                <input name="username" [(ngModel)]="formData.username" type="text" pInputText placeholder="Usuario">
+                <br>
+                <input name="password" [(ngModel)]="formData.password" type="password" pInputText placeholder="Contraseña">
+            </div>
+            <div class="remember-me-style">
+                <p-checkbox name="rememberme" value="Recuerdame" inputId="remembermeLabel"
+                    [binary]="true"></p-checkbox>
+                <label for="remembermeLabel"> Recuerdame</label>
+            </div>
+            <ng-container *ngIf="isLoading; else buttonTemplate">
+                <div class="lds-dual-ring"></div>
+            </ng-container>
+            <ng-template #buttonTemplate>
+                <p-button
+                    (onClick)="login()"
+                    label="Ingresar"
+                    [disabled]="isLoading"
+                    [style]="{
+                        'width': '100%',
+                        'background-color': 'var(--principal-color)',
+                        'border': '2px solid var(--principal-color)'
+                    }"
+                >
+                </p-button>
+            </ng-template>
+        </form>
+    </div>
+</div>

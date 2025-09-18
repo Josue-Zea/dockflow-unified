@@ -1,0 +1,8 @@
+::ng-deep .p-toolbar {
+    max-height: 10vh;
+    margin: 0 auto;
+    padding: 5px;
+    background-color: var(--principal-color);
+    border: 2px solid var(--principal-color);
+    border-radius: 0px;
+}

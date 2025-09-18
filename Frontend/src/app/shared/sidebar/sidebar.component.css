@@ -1,0 +1,17 @@
+::ng-deep .p-sidebar {
+    background-color: var(--principal-color);
+    color: white;
+}
+
+.item {
+    padding: 15px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #1f47e8;
+}
+
+.header {
+    margin-bottom: 15px;
+}

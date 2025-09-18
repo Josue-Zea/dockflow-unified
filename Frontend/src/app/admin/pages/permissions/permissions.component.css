@@ -1,0 +1,89 @@
+.principal-div{
+    margin: 0;
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel {
+    width: 30vw;
+    height: 60vh;
+    background-color: white;
+    padding: 20px;
+}
+
+.first-panel {
+    border-radius: 10px 0 0 10px;
+}
+
+.second-panel {
+    border-radius: 0 10px 10px 0;
+}
+
+/* Media query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .principal-div {
+        flex-direction: column; /* Cambia a dirección de columna */
+        align-items: center;
+        justify-content: center;
+    }
+
+    .panel {
+        width: 40vw; /* Ajusta según tus necesidades */
+        height: 500px; /* Permitir que la altura se ajuste automáticamente */
+    }
+}
+
+.position-roles {
+    padding: 5px;
+}
+
+.options {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+} 
+
+.positions-second-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.lds-dual-ring {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-bottom: 20px;
+}
+
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid var(--principal-color);
+    border-color: var(--principal-color) transparent var(--principal-color) transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,20 @@
+FROM alpine
+
+ENV SERVER_PORT="3000"
+ENV MS_DATOS="http://localhost:3001"
+ENV MS_EXPEDIENTES="https://m19r4pch-3002.use2.devtunnels.ms"
+ENV MS_LIBROS=""
+ENV DATABASE_ADDR="131.107.5.106"
+ENV KEYSPACE="sistema_nuevo"
+
+RUN apk add --update nodejs npm
+WORKDIR /app
+
+COPY package.json /app
+RUN npm install
+COPY . .
+
+# Cambiar por el puerto que vaya a utilizar la aplicación
+EXPOSE 3001
+
+CMD ["node", "index.js"]

@@ -1,0 +1,10 @@
+<div class="selector-kind-filter">
+    <p-selectButton
+        [options]="stateOptions"
+        [(ngModel)]="value"
+        optionLabel="label"
+        optionValue="value"
+    ></p-selectButton>
+</div>
+<app-simple-filter *ngIf="value === 'simple'"></app-simple-filter>
+<app-advanced-filter *ngIf="value === 'advanced'"></app-advanced-filter>

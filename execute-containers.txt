@@ -1,0 +1,22 @@
+google account
+email: evisorrm@gmail.com
+password: evisorRM2023
+
+docker account
+email: evisorrm@gmail.com
+username: evisorrm
+password: evisorRM2023
+
+Frontend:
+docker run -d --name frontend -p 80:80 -e API=http://131.107.5.84:3000 rocket1530/frontend
+
+Api
+docker run -d -p 3000:3000 --name api -e MS_DATOS=http://131.107.5.84:3001 -e MS_EXPEDIENTES=https://m19r4pch-3002.use2.devtunnels.ms rocket1530/api
+docker run -d -p 3000:3000 --name api -e MS_DATOS=http://131.107.5.84:3001 -e MS_EXPEDIENTES=https://m19r4pch-3002.use2.devtunnels.ms -e DATABASE_ADDR='131.107.5.92' -e KEYSPACE='evisor' rocket1530/api
+
+Ms-datos
+docker run -d -p 3001:3001 --name ms-datos rocket1530/ms-datos
+docker run -d -p 3001:3001 -e DATABASE_ADDR='131.107.5.92' -e KEYSPACE='evisor' --name ms-datos rocket1530/ms-datos
+
+Ms-expedientes
+docker run -d -p 3002:3002 --name ms-expedientes rocket1530/ms-expedientes

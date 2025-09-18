@@ -1,0 +1,21 @@
+<div *ngIf="user?.permisoExpedientes === 1 || user?.permisoExpedientes === 3; else elseBlock">
+    <div class="selector-kind-filter">
+        <p-selectButton
+            [options]="stateOptions"
+            [(ngModel)]="value"
+            optionLabel="label"
+            optionValue="value"
+        ></p-selectButton>
+    </div>
+    <app-simple-filter *ngIf="value === 'simple'"></app-simple-filter>
+    <!-- <app-advanced-filter *ngIf="value === 'advanced'"></app-advanced-filter> -->
+</div>  
+<ng-template #elseBlock>
+    <div class="error-container"> 
+        <h1> Oops! </h1> 
+        <p> 
+            No dispone de permisos
+            para cosultar expedientes
+        </p>
+    </div> 
+</ng-template>

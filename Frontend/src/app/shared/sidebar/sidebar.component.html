@@ -1,0 +1,12 @@
+<div class="card flex justify-content-center">
+    <p-sidebar
+        [(visible)]="sidebarVisible"
+        (onHide)="setSidebarVisible()">
+        <h4 class="header">Selecciona el menú</h4>
+        <h3
+            *ngFor="let page of optionsSidebar"
+            class="item" (click)="seleccionar(page)"
+            [class.selected]="seleccionado === page"
+        >{{ page.name }}</h3>
+    </p-sidebar>
+</div>

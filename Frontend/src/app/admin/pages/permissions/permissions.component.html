@@ -1,0 +1,63 @@
+<div class="principal-div">
+    <div class="panel first-panel">
+        <span>Seleccione el rol para visualizar sus permisos</span>
+        <div class="position-roles">
+            <ng-container *ngIf="isLoading; else listTemplate">
+                <div class="lds-dual-ring"></div>
+            </ng-container>
+            <ng-template #listTemplate>
+                <p-listbox
+                    [options]="permisosTipoUsuario"
+                    optionLabel="nombre"
+                    (onChange)="itemSelected($event)"
+                    [style]="{'width':'90%'}"
+                    [listStyle]="{'max-height': '400px'}"
+                ></p-listbox>
+            </ng-template>
+        </div>
+    </div>
+    <div class="panel second-panel">
+        <div class="positions-second-panel">
+            <div>
+                <div>
+                    <h2>Unidad de trabajo: {{ tipoUsuarioSelected.nombre }}</h2>
+                    <span>Abreviatura: {{ tipoUsuarioSelected.abreviatura }}</span>
+                </div>
+                <h3 [style]="{'margin-top': '10px'}">Permisos de expedientes</h3>
+                <div class="options">
+                    <span>Consulta </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="searchDocument"></p-inputSwitch>
+                </div>
+                <div class="options">
+                    <span>Impresión </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="printDocument"></p-inputSwitch>
+                </div>
+                <div class="options">
+                    <span>Ver trámites en proceso </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="inProcessDocuments"></p-inputSwitch>
+                </div>
+                <h3>Permisos de libros</h3>
+                <div class="options">
+                    <span>Consulta </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="searchBook"></p-inputSwitch>
+                </div>
+                <div class="options">
+                    <span>Impresión </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="printBook"></p-inputSwitch>
+                </div>
+                <div class="options">
+                    <span>Ver libros en proceso </span>
+                    <p-inputSwitch [disabled]="!editing" [(ngModel)]="inProcessBooks"></p-inputSwitch>
+                </div>
+            </div>
+            <div class="buttons">
+                <p-button *ngIf="!editing" label="Editar" severity="success" icon="pi pi-file-edit"
+                    (onClick)="edit()"></p-button>
+                <p-button *ngIf="editing" label="Cancelar" severity="danger" icon="pi pi-times"
+                    (onClick)="cancel()"></p-button>
+                <p-button *ngIf="editing" label="Guardar" severity="info" icon="pi pi-save"
+                    (onClick)="save()"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

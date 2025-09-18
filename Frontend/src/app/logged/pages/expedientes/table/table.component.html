@@ -1,0 +1,84 @@
+<div class="principal-div">
+    <div class="controls">
+        <div class="title">
+            <span>
+                Resultados obtenidos: {{ documents.length }}
+            </span>
+        </div>
+        <p-button (onClick)="getBack()" label="Volver" icon="pi pi-arrow-left"></p-button>
+    </div>
+    
+    <div class="table-container">
+        <p-table
+            [value]="documents"
+            [scrollable]="true"
+            scrollHeight="85vh"
+            selectionMode="single"
+            [tableStyle]="{ 'width': '100%' }"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="numero">Número<p-sortIcon field="numero"></p-sortIcon></th>
+                    <th pSortableColumn="anio">Año<p-sortIcon field="anio"></p-sortIcon></th>
+                    <th pSortableColumn="tramite">Trámite<p-sortIcon field="tramite"></p-sortIcon></th>
+                    <th pSortableColumn="fecha">Fecha registro<p-sortIcon field="fecha"></p-sortIcon></th>
+                    <th pSortableColumn="usuario">Usuario<p-sortIcon field="usuario"></p-sortIcon></th>
+                    <th pSortableColumn="tipo">Tipo<p-sortIcon field="tipo"></p-sortIcon></th>
+                    <th pSortableColumn="subtipo">Subtipo<p-sortIcon field="subtipo"></p-sortIcon></th>
+                    <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                    <th style="width: 5rem"></th>
+                </tr>
+                <!-- Columna para setear los filtros en la tabla -->
+                <tr>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="numberOptions" type="numeric" field="numero"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="numberOptions" type="numeric" field="anio"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="numberOptions" type="numeric" field="tramite"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="dateOptions" type="date" field="fecha"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="matchModeOptions" type="text" field="usuario"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="matchModeOptions" type="text" field="tipo"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="matchModeOptions" type="text" field="subtipo"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter [matchModeOptions]="matchModeOptions" type="text" field="estado"></p-columnFilter>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-document>
+                <tr>
+                    <td>{{ document.numero }}</td>
+                    <td>{{ document.anio }}</td>
+                    <td>{{ document.numeroTramite }}</td>
+                    <td>{{ document.fecha }}</td>
+                    <td>{{ document.usuario }}</td>
+                    <td>{{ document.tipo }}</td>
+                    <td>{{ document.subtipo }}</td>
+                    <td>{{ document.estado }}</td>
+                    <td>
+                        <button
+                            type="button"
+                            pButton
+                            pRipple
+                            icon="pi pi-arrow-right"
+                            (click)="selectDocument(document)"
+                        ></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
