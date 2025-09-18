@@ -1,0 +1,18 @@
+FROM alpine
+
+ENV SERVER_PORT="3005"
+ENV API="https://apirep.registromercantil.gob.gt"
+ENV DATABASE_ADDR="131.107.5.92"
+ENV KEYSPACE="evisor"
+
+RUN apk add --update nodejs npm
+WORKDIR /app
+
+COPY package.json /app
+RUN npm install
+COPY . .
+
+# Cambiar por el puerto que vaya a utilizar la aplicación
+EXPOSE 3005
+
+CMD ["node", "index.js"]

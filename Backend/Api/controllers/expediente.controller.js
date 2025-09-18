@@ -77,6 +77,7 @@ const getTipoExpediente = async (req, res) => {
             'Content-Type': 'application/json',
         },
     };
+    console.log(`${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getTipoExpediente`);
     const response = await fetch(
         `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getTipoExpediente`,
         opciones

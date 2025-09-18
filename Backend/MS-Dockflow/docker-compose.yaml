@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  cassandra-node1:
+    image: cassandra:latest
+    container_name: cassandra-node1
+    ports:
+      - "9042:9042"
+      - "7000:7000"
+    networks:
+      - cassandra-net
+    volumes:
+      - cassandra-node1-data:/root/cassandra-data
+
+networks:
+  cassandra-net:
+    driver: bridge
+
+volumes:
+  cassandra-node1-data:

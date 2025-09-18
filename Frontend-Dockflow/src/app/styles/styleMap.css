@@ -1,0 +1,122 @@
+.react-flow__node.highlight {
+    background-color: #5dbeff;
+    color: white;
+  }
+  
+  .intersection-flow .react-flow__node {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    border-radius: 1px;
+    border-width: 2px;
+    /*box-shadow: 6px 6px 0 1px rgba(0, 0, 0, 0.7);*/
+  }
+  
+  .intersection-flow .react-flow__node.selected,
+  .intersection-flow .react-flow__node:hover,
+  .intersection-flow .react-flow__node:focus {
+    color: rgb(0, 0, 0);
+    /*box-shadow: 6px 6px 0 1px rgba(0, 0, 0, 0.7);*/
+    /*background-color: #f1ecec;*/
+  }
+  
+  .intersection-flow .react-flow__handle {
+    display: none;
+  }
+
+
+  .react-flow__node-selectorNode {
+    font-size: 12px;
+    background: #eee;
+    border: 1px solid #555;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+
+  /*Centrar Divs*/
+  .div-centrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /*Encabezado de Nodo*/
+  .encabezado-nodo {
+    font-size: 7px; 
+  }
+
+  /*Nodo Estante*/
+
+  .box-estante-ver {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .box-estante-hor {
+    direction: ltr;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .texto-tab{
+    font-size: 7px;
+  }
+
+
+/* Editar el scroll de los nodos de los estantes*/
+  ::-webkit-scrollbar {
+    width: 8px;     
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9f9e9e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #999999;
+}
+
+::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track:hover,
+::-webkit-scrollbar-track:active {
+  background: #d4d4d4;
+}
+
+/*Nodos de Mapa*/
+
+.containerBot {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* O la altura deseada */
+}
+
+.headerBot {
+  height: 50px; /* Altura fija del encabezado */
+  background: #f0f0f0;
+}
+
+.contentBot {
+  flex: 1; /* Ocupa todo el espacio restante */
+  display: flex;
+}
+
+.scrollableBot {
+  flex: 1; /* Se expande para ocupar todo el espacio */
+  overflow-y: auto; /* Agrega scroll si es necesario */
+  background: #fafafa;
+  padding: 10px;
+}
+

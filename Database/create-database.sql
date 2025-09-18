@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS evisor.PermisosTipoUsuario (
 CREATE TABLE IF NOT EXISTS evisor.Usuario (
     Id UUID PRIMARY KEY,
     IDTipoUsuario UUID,
-    Nombre TEXT
+    Nombre TEXT,
+    Usuario TEXT,
+    Contrasenia TEXT
 );
 
 CREATE TABLE IF NOT EXISTS evisor.TipoLibro (

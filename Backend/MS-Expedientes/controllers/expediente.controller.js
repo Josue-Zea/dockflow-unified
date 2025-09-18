@@ -1,4 +1,4 @@
-const { getExpedienteApi } = require("../utils/getExpedienteApi");
+const { getExpedienteApi, lookInDatabase } = require("../utils/getExpedienteApi");
 const { parsePdfData } = require("../utils/parsePdfData");
 const stream = require('stream');
 const { savePdfInDatabase } = require("../utils/saveDocumentDatabase");
@@ -8,45 +8,28 @@ const { getTipoExpedienteDB, getSubtipoExpedienteDB } = require("../utils/getTip
 const getExpediente = async (req, res) => {
     const { numero_expediente, anio_expediente, watermark = false } = req.body;
 
-    const result = await getExpedienteApi(numero_expediente, anio_expediente);
+    const result = await lookInDatabase(numero_expediente, anio_expediente);
     if (result.correct) {
         try {
-            let resultParse = null;
-            if (result.fromRM) {
-                resultParse = await parsePdfData(result.data, watermark);
-                savePdfInDatabase(numero_expediente, anio_expediente, resultParse.data, 1, null, null)
-            } else {
-                resultParse = result;
+            const respuesta = {
+                empty: "false"
             }
-            
-            if (resultParse.correct) {
-                //const { esolicitud, num_tramite } = result.data;
-                // const respuesta = {
-                //     esolicitud: esolicitud,
-                //     numero_tramite: num_tramite,
-                //     numero_expediente,
-                //     anio_expediente,
-                // }
-                const respuesta = {
-                    empty: "false"
-                }
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'inline; filename=expediente.pdf');
-                res.setHeader('Respuesta-Info', JSON.stringify(respuesta));
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline; filename=expediente.pdf');
+            res.setHeader('Respuesta-Info', JSON.stringify(respuesta));
 
-                const bufferStream = new stream.PassThrough();
-                bufferStream.end(Buffer.from(resultParse.data, 'base64'));
-                bufferStream.pipe(res);
-                res.status(200);
-                return;
-            }
+            const bufferStream = new stream.PassThrough();
+            bufferStream.end(Buffer.from(result.data, 'base64'));
+            bufferStream.pipe(res);
+            res.status(200);
+            return;
         } catch (err) {
             res.status(501).send("Error en generacion de pdf");
             console.log(err);
             console.log("Error en generacion de pdf"); return;
         }
     }
-    res.status(400).send({ message : "Ocurrio algún error" });
+    res.status(400).send({ message: "Ocurrio algún error" });
 };
 
 const createExpediente = async (req, res) => {
@@ -54,9 +37,9 @@ const createExpediente = async (req, res) => {
 
     const result = await savePdfInDatabase(numero_expediente, anio_expediente, document, numerotramite, idtipo, idsubtipo);
     if (result.correct) {
-        res.status(200).send({ message : "Expediente creado correctamente" });
+        res.status(200).send({ message: "Expediente creado correctamente" });
     } else {
-        res.status(400).send({ message : "Ocurrio algún error" });
+        res.status(400).send({ message: "Ocurrio algún error" });
     }
 };
 
@@ -65,9 +48,9 @@ const deleteExpediente = async (req, res) => {
 
     const result = await deleteDocumennt(numero, anio, numerotramite, iddocumento);
     if (result.correct) {
-        res.status(200).send({ message : "Expediente eliminado correctamente" });
+        res.status(200).send({ message: "Expediente eliminado correctamente" });
     } else {
-        res.status(400).send({ message : "Ocurrio algún error" });
+        res.status(400).send({ message: "Ocurrio algún error" });
     }
 };
 

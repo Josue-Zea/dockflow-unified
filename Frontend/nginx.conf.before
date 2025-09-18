@@ -1,0 +1,39 @@
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name dockflow; 
+    root /usr/share/nginx/html;
+
+    ssl_certificate /etc/ssl/certs/registromercantil_gob_gt.crt;
+    ssl_certificate_key /etc/ssl/registromercantil_gob_gt.key;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /dashboard {
+        try_files $uri /dashboard.html;
+    }
+
+    location /estantes {
+        try_files $uri /estantes.html;
+    }
+
+    location /cajas {
+        try_files $uri /cajas.html;
+    }
+
+    location /expedientes {
+        try_files $uri /expedientes.html;
+    }
+
+    location /mapaEstantes {
+        try_files $uri /mapaEstantes.html;
+    }
+
+    # Página de error 404
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
