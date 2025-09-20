@@ -229,7 +229,7 @@ const addExpedienteCaja = async (req, res) => {
     const result = await fetchRoute(
         'PUT',
         req.body,
-        `${SERVER_CONFIG.MS_DOCKFLOW}/dockflow/cajaadd/${idCaja}/${idExpediente}`
+        `${SERVER_CONFIG.MS_DOCKFLOW}/dockflow/caja_expediente/${idCaja}/${idExpediente}`
     );
     res.status(result.code).send(result.data);
 };

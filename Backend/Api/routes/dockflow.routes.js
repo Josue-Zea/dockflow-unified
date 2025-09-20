@@ -26,7 +26,7 @@ api.get('/getExpediente/:numero/:anio', checkAuth, controller.getExpediente);
 api.get('/getDocumento/:idDocumento', checkAuth, controller.getDocumento);
 api.get('/getExpedientesFromBox/:idCaja', checkAuth, controller.getExpedientesFromCaja);
 api.get('/getAllExpedientes', checkAuth, controller.getAllExpedientes);
-api.put('/cajaadd/:idCaja/:idExpediente', checkAuth, controller.addExpedienteCaja);
+api.put('/caja_expediente/:idCaja/:idExpediente', checkAuth, controller.addExpedienteCaja);
 api.delete('/caja/removeExpediente/:idExpediente', checkAuth, controller.removeExpedienteCaja);
 api.get('/getExpedienteType/:numero/:anio', checkAuth, controller.getInfoExpediente);
 api.get('/getTramitesExpediente/:idDocumento', checkAuth, controller.getTramitesExpediente);

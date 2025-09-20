@@ -27,6 +27,7 @@ const getCajas = async (req, res) => {
     }
     res.status(code).send(data);
 };
+
 const getCajasSinEstante = async (req, res) => {
     let code = 0, data = { message: "" };
     try {

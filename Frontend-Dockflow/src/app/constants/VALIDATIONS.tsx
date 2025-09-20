@@ -2,8 +2,8 @@ export const VALIDATIONS = {
     fullNameValidation: {
         required: 'Debe ingresar su nombre completo',
         pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
+            value: /^[A-Za-zÀ-ÿ0-9\s]+$/,
+            message: 'Solo se permiten letras, números y espacios',
             maxLength: {
                 value: 100,
                 message: 'El nombre no puede tener más de 100 caracteres',
@@ -13,8 +13,8 @@ export const VALIDATIONS = {
     nameValidation: {
         required: 'Debe ingresar su nombre',
         pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
+            value: /^[A-Za-zÀ-ÿ0-9\s]+$/,
+            message: 'Solo se permiten letras, números y espacios',
             maxLength: {
                 value: 100,
                 message: 'Sus nombres no pueden tener más de 100 caracteres',
@@ -24,55 +24,11 @@ export const VALIDATIONS = {
     nameWorkValidation: {
         required: 'Debe ingresar su rubro de trabajo',
         pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
+            value: /^[A-Za-zÀ-ÿ0-9\s]+$/,
+            message: 'Solo se permiten letras, números y espacios',
             maxLength: {
                 value: 50,
                 message: 'El rubro de trabajo no puede tener más de 50 caracteres',
-            },
-        }
-    },
-    alergicItemValidation: {
-        required: 'Debe a qué es alérgico',
-        pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
-            maxLength: {
-                value: 50,
-                message: 'Este campo no puede contener más de 50 caracteres',
-            },
-        }
-    },
-    nameCompanyWorkValidation: {
-        required: 'Debe ingresar su lugar de trabajo',
-        pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
-            maxLength: {
-                value: 50,
-                message: 'El lugar de trabajo no puede tener más de 50 caracteres',
-            },
-        }
-    },
-    lastNameValidation: {
-        required: 'Debe ingresar su apellido',
-        pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
-            maxLength: {
-                value: 100,
-                message: 'Los apellidos no pueden tener más de 100 caracteres',
-            },
-        }
-    },
-    coupleValidation: {
-        required: 'Debe ingresar el nombre completo de su pareja o conyugue',
-        pattern: {
-            value: /^[A-Za-zÀ-ÿ\s]+$/,
-            message: 'Solo se permiten letras y espacios',
-            maxLength: {
-                value: 100,
-                message: 'El nombre no puede tener más de 100 caracteres',
             },
         }
     },

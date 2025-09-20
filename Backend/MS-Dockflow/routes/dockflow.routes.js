@@ -30,7 +30,7 @@ api.get('/getExpediente/:numero/:anio', cajasController.getExpediente);
 api.get('/getDocumento/:idDocumento', cajasController.getDocumento);
 api.get('/getExpedientesFromBox/:idCaja', cajasController.getExpedientesFromCaja);
 api.get('/getExpedientes', cajasController.getAllExpedientes);
-api.put('/caja/:idCaja/:idExpediente', cajasController.addExpedienteCaja);
+api.put('/caja_expediente/:idCaja/:idExpediente', cajasController.addExpedienteCaja);
 api.delete('/caja/removeExpediente/:idExpediente', cajasController.removeExpedienteCaja);
 api.get('/getExpedienteType/:numero/:anio', expedientesController.getInfoExpediente);
 api.get('/getTramitesExpediente/:idDocumento', expedientesController.getTramitesExpediente);

@@ -5,11 +5,10 @@ const CustomDropDown = ({ options, text, optionName, width, secondName, multiNam
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
 
-    // Función para manejar la selección de una opción
     const handleOptionClick = (option: any) => {
         setSelectedOption(option);
         setOption(option);
-        setIsOpen(false); // Cerrar el menú al seleccionar una opción
+        setIsOpen(false);
     };
 
     return (

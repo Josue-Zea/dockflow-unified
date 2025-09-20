@@ -3,7 +3,7 @@ import { Document } from '../interfaces/Document';
 import { DocumentsTable } from '../components/DocumentsTable';
 import { useRouter } from 'next/navigation';
 
-export const DocumentList = ({ documents }: DocumentListProps) => {
+export const DocumentList = ({ documents, reloadDocuments }: DocumentListProps) => {
     const router = useRouter();
     const handleClickDocument = () => {
         console.log("")
@@ -23,7 +23,11 @@ export const DocumentList = ({ documents }: DocumentListProps) => {
 
             <h2 className="text-xl font-bold mb-4">Listado de Expedientes</h2>
             {documents.length > 0 ? (
-                <DocumentsTable documents={documents} handleClickDocument={handleClickDocument} />
+                <DocumentsTable
+                    documents={documents}
+                    handleClickDocument={handleClickDocument}
+                    reloadDocuments={reloadDocuments}
+                />
             ) : (
                 <p className="text-gray-500">No hay estantes registrados.</p>
             )}
@@ -32,5 +36,6 @@ export const DocumentList = ({ documents }: DocumentListProps) => {
 }
 
 export interface DocumentListProps {
-    documents: Document[]
+    documents: Document[];
+    reloadDocuments?: () => void;
 }

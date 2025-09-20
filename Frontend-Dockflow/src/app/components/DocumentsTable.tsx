@@ -3,7 +3,7 @@ import { Document } from '../interfaces/Document'
 import { SmallIconAllert, YesNoAlert } from '../alerts/alerts.functions'
 import { documentsService } from '../services/documentsService'
 
-export const DocumentsTable = ({ documents, handleClickDocument }: DocumentsTableProps) => {
+export const DocumentsTable = ({ documents, handleClickDocument, reloadDocuments }: DocumentsTableProps) => {
     const handleRemoveDocumentFromBox = async (document: Document) => {
         const result = await YesNoAlert("warning", "¿Estas seguro que deseas remover el expediente de esta caja?", "Si deseas agregarlo nuevamente tendrás que hacerlo manualmente", "Confirmar")
 
@@ -15,10 +15,11 @@ export const DocumentsTable = ({ documents, handleClickDocument }: DocumentsTabl
         )
 
         if (response.status === 200) {
-            SmallIconAllert("success", "Expediente removido de la caja")
-            handleClickDocument()
+            SmallIconAllert("success", "Expediente removido de la caja");
+            handleClickDocument();
+            reloadDocuments && reloadDocuments();
         } else {
-            SmallIconAllert("error", "Error al remover el expediente de la caja")
+            SmallIconAllert("error", "Error al remover el expediente de la caja");
         }
     }
 
@@ -63,6 +64,7 @@ export const DocumentsTable = ({ documents, handleClickDocument }: DocumentsTabl
 }
 
 interface DocumentsTableProps {
-    documents: Document[]
-    handleClickDocument: () => void
+    documents: Document[];
+    handleClickDocument: () => void;
+    reloadDocuments?: () => void;
 }

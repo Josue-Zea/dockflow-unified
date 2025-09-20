@@ -1,143 +1,159 @@
-import React, { useState } from 'react'
-import { CustomInput } from '../components/CustomInput';
-import { useForm } from 'react-hook-form';
-import { Shelf } from '../interfaces/Shelf';
-import { shelfsService } from '../services/shelfsService';
-import { BigIconAlert } from '../alerts/alerts.functions';
-import { VALIDATIONS } from '../constants/VALIDATIONS';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { CustomInput } from "../components/CustomInput";
+import { Shelf } from "../interfaces/Shelf";
+import { shelfsService } from "../services/shelfsService";
+import { BigIconAlert } from "../alerts/alerts.functions";
+import { VALIDATIONS } from "../constants/VALIDATIONS";
 
-export const ShelfList = ({ shelfs, selectShelf }: ShelfList) => {
+interface ShelfListProps {
+    shelfs: Shelf[];
+    selectShelf: (shelf: Shelf) => void;
+    reloadShelfs?: () => void;
+}
+
+interface FormValues {
+    nombreEstante: string;
+    ejeX: number;
+    ejeY: number;
+    ejeZ: number;
+    alto: number;
+    ancho: number;
+}
+
+export const ShelfList = ({ shelfs, selectShelf, reloadShelfs }: ShelfListProps) => {
     const [addShelf, setAddShelf] = useState(false);
-    const { register, formState: { errors }, handleSubmit } = useForm()
+    const [loading, setLoading] = useState(false);
 
-    const handleCreateShelf = () => {
-        handleSubmit(async (data) => {
-            const token = localStorage.getItem("token");
-            try {
-                const body = {
-                    nombre: data.nombreEstante,
-                    ejex: data.ejeX,
-                    ejey: data.ejeY,
-                    ejez: data.ejeZ,
-                    alto: data.alto,
-                    ancho: data.ancho
-                };
-                const response = await shelfsService.createNewShelf('/dockflow/estante', { 'Authorization': `Bearer ${token}`}, body);
-                if (response.status === 200) {
-                    BigIconAlert(
-                        'success',
-                        'Exito',
-                        `Se ha creado el estante ${data.nombreEstante}`,
-                        'center'
-                    );
-                } else {
-                    BigIconAlert(
-                        'error',
-                        'Error',
-                        `Ha ocurrido un error al crear el estante ${data.nombreEstante}`,
-                        'center'
-                    );
-                }
-            } catch (err: any) {
-                alert(`Error al crear el estante: ${err.message}`);
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+    } = useForm<FormValues>();
+
+    const onSubmit = async (data: FormValues) => {
+        const token = localStorage.getItem("token");
+        setLoading(true);
+
+        try {
+            const body = {
+                nombre: data.nombreEstante,
+                ejex: data.ejeX,
+                ejey: data.ejeY,
+                ejez: data.ejeZ,
+                alto: data.alto,
+                ancho: data.ancho,
+            };
+
+            const response = await shelfsService.createNewShelf(
+                "/dockflow/estante",
+                { Authorization: `Bearer ${token}` },
+                body
+            );
+
+            if (response.status === 200) {
+                BigIconAlert(
+                    "success",
+                    "Éxito",
+                    `Se ha creado el estante ${data.nombreEstante}`,
+                    "center"
+                );
+                reset();
+                setAddShelf(false);
+                if (reloadShelfs) reloadShelfs();
+            } else {
+                BigIconAlert(
+                    "error",
+                    "Error",
+                    `Ha ocurrido un error al crear el estante ${data.nombreEstante}`,
+                    "center"
+                );
             }
-        })();
-    }
+        } catch (err: any) {
+            BigIconAlert("error", "Error", `Error al crear: ${err.message}`, "center");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
             <h1 className="text-2xl font-bold mb-4">Estantes</h1>
 
-            {/* Formulario para agregar o editar un estante */}
-            {
-                addShelf ? (
-                    <form className="mb-6" onSubmit={() => console.log("")}>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Nombre</label>
-                            <CustomInput
-                                type="text"
-                                placeHolder="Nombre del estante"
-                                formField="nombreEstante"
-                                register={register}
-                                validations={VALIDATIONS.fullNameValidation}
-                                errors={errors}
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label className="block mb-2 text-sm font-bold text-gray-700">Eje X</label>
+            {addShelf ? (
+                <form className="mb-6" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="mb-4">
+                        <label
+                            htmlFor="nombreEstante"
+                            className="block mb-2 text-sm font-bold text-gray-700"
+                        >
+                            Nombre
+                        </label>
+                        <CustomInput
+                            type="text"
+                            placeHolder="Nombre del estante"
+                            formField="nombreEstante"
+                            register={register}
+                            validations={VALIDATIONS.fullNameValidation}
+                            errors={errors}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                        {[
+                            { name: "ejeX", label: "Eje X" },
+                            { name: "ejeY", label: "Eje Y" },
+                            { name: "ejeZ", label: "Eje Z" },
+                            { name: "alto", label: "Alto" },
+                            { name: "ancho", label: "Ancho" },
+                        ].map(({ name, label }) => (
+                            <div key={name}>
+                                <label
+                                    htmlFor={name}
+                                    className="block mb-2 text-sm font-bold text-gray-700"
+                                >
+                                    {label}
+                                </label>
                                 <CustomInput
                                     type="number"
-                                    placeHolder="Eje X"
-                                    formField="ejeX"
+                                    placeHolder={label}
+                                    formField={name}
                                     register={register}
                                     validations={VALIDATIONS.numberValidation}
                                     errors={errors}
                                 />
                             </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-bold text-gray-700">Eje Y</label>
-                                <CustomInput
-                                    type="number"
-                                    placeHolder="Eje Y"
-                                    formField="ejeY"
-                                    register={register}
-                                    validations={VALIDATIONS.numberValidation}
-                                    errors={errors}
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-bold text-gray-700">Eje Z</label>
-                                <CustomInput
-                                    type="number"
-                                    placeHolder="Eje Z"
-                                    formField="ejeZ"
-                                    register={register}
-                                    validations={VALIDATIONS.numberValidation}
-                                    errors={errors}
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-bold text-gray-700">Alto</label>
-                                <CustomInput
-                                    type="number"
-                                    placeHolder="Alto"
-                                    formField="alto"
-                                    register={register}
-                                    validations={VALIDATIONS.numberValidation}
-                                    errors={errors}
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-bold text-gray-700">Ancho</label>
-                                <CustomInput
-                                    type="number"
-                                    placeHolder="Ancho"
-                                    formField="ancho"
-                                    register={register}
-                                    validations={VALIDATIONS.numberValidation}
-                                    errors={errors}
-                                />
-                            </div>
-                        </div>
+                        ))}
+                    </div>
+
+                    <div className="flex gap-3">
                         <button
                             type="submit"
-                            className={`bg-blue-500 text-white px-4 py-2 rounded hover:opacity-80 transition`}
-                            onClick={handleCreateShelf}
+                            disabled={loading}
+                            className={`bg-blue-500 text-white px-4 py-2 rounded transition ${loading ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"
+                                }`}
                         >
-                            Crear estante
+                            {loading ? "Creando..." : "Crear estante"}
                         </button>
-                    </form>
-                ) : (
-                    <button
-                        type="submit"
-                        className={`bg-blue-500 text-white px-4 py-2 rounded hover:opacity-80 transition mb-4`}
-                        onClick={() => setAddShelf(!addShelf)}
-                    >
-                        Crear estante
-                    </button>
-                )
-            }
+                        <button
+                            type="button"
+                            className="bg-gray-400 text-white px-4 py-2 rounded hover:opacity-80 transition"
+                            onClick={() => setAddShelf(false)}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            ) : (
+                <button
+                    type="button"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:opacity-80 transition mb-4"
+                    onClick={() => setAddShelf(true)}
+                >
+                    Crear estante
+                </button>
+            )}
 
             {/* Tabla de estantes */}
             <h2 className="text-xl font-bold mb-4">Listado de Estantes</h2>
@@ -157,15 +173,15 @@ export const ShelfList = ({ shelfs, selectShelf }: ShelfList) => {
                         {shelfs.map((shelf, index) => (
                             <tr
                                 key={index}
-                                className="border-b border-gray-200 hover:bg-gray-100 "
+                                className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
                                 onClick={() => selectShelf(shelf)}
                             >
-                                <td className="py-3 px-6 text-left whitespace-nowrap">{shelf.nombre}</td>
-                                <td className="py-3 px-6 text-left">{shelf.ejex}</td>
-                                <td className="py-3 px-6 text-left">{shelf.ejey}</td>
-                                <td className="py-3 px-6 text-left">{shelf.ejez}</td>
-                                <td className="py-3 px-6 text-left">{shelf.alto}</td>
-                                <td className="py-3 px-6 text-left">{shelf.ancho}</td>
+                                <td className="py-3 px-6">{shelf.nombre}</td>
+                                <td className="py-3 px-6">{shelf.ejex}</td>
+                                <td className="py-3 px-6">{shelf.ejey}</td>
+                                <td className="py-3 px-6">{shelf.ejez}</td>
+                                <td className="py-3 px-6">{shelf.alto}</td>
+                                <td className="py-3 px-6">{shelf.ancho}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -174,10 +190,5 @@ export const ShelfList = ({ shelfs, selectShelf }: ShelfList) => {
                 <p className="text-gray-500">No hay estantes registrados.</p>
             )}
         </>
-    )
-}
-
-export interface ShelfList {
-    shelfs: Shelf[]
-    selectShelf: (shelf: Shelf) => void
-}
+    );
+};

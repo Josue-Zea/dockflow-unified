@@ -11,7 +11,7 @@ import CustomDropDown from '../components/CustomDropDown';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-export const SelectedShelf = ({ shelf, setSelectedShelf }: ShelfProps) => {
+export const SelectedShelf = ({ shelf, setSelectedShelf, reloadShelfs }: ShelfProps) => {
     const [boxs, setBoxs] = useState<Box[]>([])
     const [availableBox, setAvailableBox] = useState<Box[]>([])
     const [isAddingBox, setIsAddingBox] = useState(false)
@@ -62,7 +62,9 @@ export const SelectedShelf = ({ shelf, setSelectedShelf }: ShelfProps) => {
 
         if (response.status === 200) {
             SmallIconAllert("success", "Estante eliminado correctamente");
-            setSelectedShelf(null)
+            setSelectedShelf(null);
+            localStorage.removeItem('selectedShelf')
+            reloadShelfs();
         } else {
             SmallIconAllert("error", "Error al eliminar el estante");
         }
@@ -281,6 +283,7 @@ export const SelectedShelf = ({ shelf, setSelectedShelf }: ShelfProps) => {
 }
 
 interface ShelfProps {
-    shelf: Shelf
-    setSelectedShelf: (data: any) => void
+    shelf: Shelf;
+    setSelectedShelf: (data: any) => void;
+    reloadShelfs: () => void;
 }
