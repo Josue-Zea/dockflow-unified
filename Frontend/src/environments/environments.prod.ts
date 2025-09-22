@@ -1,4 +1,4 @@
 export const ENVIRONMENT = {
     PRODUCTION: true,
-    APIURL: 'http://localhost:3000', // Tu variable de entorno
+    APIURL: 'http://172.206.225.47:3000', // Tu variable de entorno
 };

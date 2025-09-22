@@ -5,7 +5,7 @@ import { BsBookshelf } from "react-icons/bs";
 import { TiDropbox } from "react-icons/ti";
 import { IoIosDocument } from "react-icons/io";
 import { Sidebar, Menu, MenuItem, SubMenu, sidebarClasses } from 'react-pro-sidebar';
-import logo from "@/app/assets/LogoRM.png"
+import logo from "@/app/assets/LogoMineco.png"
 
 const ICON_SIZE = 22
 
@@ -42,7 +42,7 @@ export const SideBarComponent = ({ collapsed, toggled, setToggled }: any) => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginTop: '30px', marginBottom: '30px' }}>
-          <img className='w-10 ml-2' src={logo.src} alt='logo' />
+          <img className='w-40' src={logo.src} alt='logo' />
         </div>
         <SubMenu label="Escaner" icon={<MdAdfScanner size={ICON_SIZE} />}>
           <MenuItem component={<a href={"dashboard"} />} icon={<MdAdfScanner size={ICON_SIZE} />}>Escaner</MenuItem>
