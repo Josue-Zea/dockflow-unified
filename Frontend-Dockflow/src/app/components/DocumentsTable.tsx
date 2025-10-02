@@ -16,7 +16,6 @@ export const DocumentsTable = ({ documents, handleClickDocument, reloadDocuments
 
         if (response.status === 200) {
             SmallIconAllert("success", "Expediente removido de la caja");
-            handleClickDocument();
             reloadDocuments && reloadDocuments();
         } else {
             SmallIconAllert("error", "Error al remover el expediente de la caja");
@@ -38,7 +37,8 @@ export const DocumentsTable = ({ documents, handleClickDocument, reloadDocuments
                 {documents.map((document, index) => (
                     <tr
                         key={index}
-                        className="border-b border-gray-200 hover:bg-gray-100 "
+                        className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleClickDocument(document)}
                     >
                         <td className="py-3 px-6 text-left whitespace-nowrap">{document.numero}</td>
                         <td className="py-3 px-6 text-left">{document.anio}</td>
@@ -65,6 +65,6 @@ export const DocumentsTable = ({ documents, handleClickDocument, reloadDocuments
 
 interface DocumentsTableProps {
     documents: Document[];
-    handleClickDocument: () => void;
+    handleClickDocument: (document: Document) => void;
     reloadDocuments?: () => void;
 }

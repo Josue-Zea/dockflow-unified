@@ -1,4 +1,5 @@
 import { variables } from "../configs/variables";
+import { TypeTramite } from "../interfaces/TypeTramite";
 
 const API_BASE_URL = variables.host
 
@@ -133,6 +134,93 @@ export const documentsService = {
     },
 
     getExpediente: async (endpoint: string, headers: Record<string, string> = {}) => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+        });
+
+        return response;
+    },
+
+    getTramitesFromDocument: async (endpoint: string, headers: Record<string, string> = {}) => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+        });
+
+        return response;
+    },
+
+    deleteTramite: async (endpoint: string, headers: Record<string, string> = {}) => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+        });
+
+        return response;
+    },
+
+    getTramitesTypes: async (endpoint: string, headers: Record<string, string> = {}): Promise<TypeTramite[]> => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+        });
+
+        return response.json() as Promise<TypeTramite[]>;
+    },
+
+    /**
+     * Crea un trámite asociado a un documento
+     * Body esperado: { iddocumento, pdfbase64, nombre, fecha, tipotramite }
+     */
+    createTramite: async (
+        endpoint: string,
+        body: {
+            pdfbase64: string;
+            nombre: string;
+            fecha: string;
+            tipotramite: string;
+        },
+        headers: Record<string, string> = {}
+    ) => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        return response;
+    },
+
+    getExpedientePdf: async (endpoint: string, headers: Record<string, string> = {}, body: any) => {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body)
+        });
+
+        return response;
+    },
+
+    getTramitePdf: async (endpoint: string, headers: Record<string, string> = {}) => {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             method: 'GET',
             headers: {

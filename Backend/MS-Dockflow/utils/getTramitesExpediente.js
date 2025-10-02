@@ -1,9 +1,9 @@
 const { client } = require("../database/conection");
 
-const obtenerTramitesDeExpedienteDatabase = async (iddocumento) => {
+const obtenerTramitesDeExpedienteDatabase = async (iddocumentopadre) => {
     const query =
-    "SELECT * FROM tramite where iddocumento = ? ALLOW FILTERING";
-    const result = await client.execute(query, [iddocumento], { prepare: true });
+    "SELECT * FROM tramite where iddocumentopadre = ? ALLOW FILTERING";
+    const result = await client.execute(query, [iddocumentopadre], { prepare: true });
 
     if (result.hasError) {
         throw new Error(result.error);

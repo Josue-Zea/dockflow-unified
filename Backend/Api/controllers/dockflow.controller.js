@@ -184,6 +184,27 @@ const getTramitesType = async (req, res) => {
     res.status(result.code).send(result.data);
 };
 
+const getTramitePdf = async (req, res) => {
+    const idDocumento = req.params.idDocumento;
+    const result = await fetchRoute(
+        'GET',
+        req.body,
+        `${SERVER_CONFIG.MS_DOCKFLOW}/dockflow/getTramitePdf/${idDocumento}`
+    );
+    res.status(result.code).send(result.data);
+};
+
+const deleteTramite = async (req, res) => {
+    const idTramite = req.params.idTramite;
+    const idDocumento = req.params.idDocumento;
+    const result = await fetchRoute(
+        'DELETE',
+        null,
+        `${SERVER_CONFIG.MS_DOCKFLOW}/dockflow/deleteTramite/${idTramite}/${idDocumento}`
+    );
+    res.status(result.code).send(result.data);
+}
+
 const createTramite = async (req, res) => {
     const result = await fetchRoute(
         'POST',
@@ -268,5 +289,7 @@ module.exports = {
     getTramitesExpediente,
     createTramite,
     getTramitesDocumentosExpediente,
-    getTramitesType
+    getTramitesType,
+    getTramitePdf,
+    deleteTramite
 };

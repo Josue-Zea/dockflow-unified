@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Document } from '../interfaces/Document';
 import { DocumentsTable } from '../components/DocumentsTable';
 import { useRouter } from 'next/navigation';
+import DocumentSelected from './DocumentSelected';
 
 export const DocumentList = ({ documents, reloadDocuments }: DocumentListProps) => {
+    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     const router = useRouter();
-    const handleClickDocument = () => {
-        console.log("")
+    const handleClickDocument = (document: Document) => {
+        setSelectedDocument(document);
     };
 
     return (
@@ -21,16 +23,25 @@ export const DocumentList = ({ documents, reloadDocuments }: DocumentListProps) 
                 Agregar expediente
             </button>
 
-            <h2 className="text-xl font-bold mb-4">Listado de Expedientes</h2>
-            {documents.length > 0 ? (
-                <DocumentsTable
-                    documents={documents}
-                    handleClickDocument={handleClickDocument}
-                    reloadDocuments={reloadDocuments}
-                />
-            ) : (
-                <p className="text-gray-500">No hay estantes registrados.</p>
-            )}
+            {
+                selectedDocument ? (
+                    <DocumentSelected document={selectedDocument} back={() => setSelectedDocument(null)} />
+                ) : (
+                    <>
+                        <h2 className="text-xl font-bold mb-4">Listado de Expedientes</h2>
+
+                        {documents.length > 0 ? (
+                            <DocumentsTable
+                                documents={documents}
+                                handleClickDocument={handleClickDocument}
+                                reloadDocuments={reloadDocuments}
+                            />
+                        ) : (
+                            <p className="text-gray-500">No hay Expedientes registrados.</p>
+                        )}
+                    </>
+                )
+            }
         </>
     )
 }

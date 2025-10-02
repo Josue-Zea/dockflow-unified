@@ -39,5 +39,7 @@ api.get('/getTramitesDocumentosExpediente/:idDocumento', expedientesController.g
 // TRAMITES
 api.post('/createTramite', tramitesController.createTramite);
 api.get('/getTramitesType', tramitesController.getTramitesType);
+api.get('/getTramitePdf/:idDocumento', tramitesController.getTramitePdf);
+api.delete('/deleteTramite/:idTramite/:idDocumento', tramitesController.deleteTramite);
 
 module.exports = api;
