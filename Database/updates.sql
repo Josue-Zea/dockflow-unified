@@ -1,1 +1,0 @@
-ALTER TABLE evisor.Tramites ADD iddocumentopadre UUID;

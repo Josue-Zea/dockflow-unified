@@ -51,6 +51,9 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+# Preferimos Yarn; ignorar locks de npm
+package-lock.json
+
 # Optional eslint cache
 .eslintcache
 

@@ -5,6 +5,11 @@ const SERVER_CONFIG = {
     API: process.env.API || "https://apirep.registromercantil.gob.gt",
 }
 
+const FILES_SERVICE_CONFIG = {
+    BASE_URL: (process.env.FILES_SERVICE_URL || 'http://localhost:3006').replace(/\/$/, ''),
+    BASE_PATH: process.env.FILES_BASE_PATH || 'C:/Documents'
+};
+
 const DATABASE_CONFIG = {
     DATABASE_ADDR: process.env.DATABASE_ADDR || "131.107.5.92",
     KEYSPACE: process.env.KEYSPACE || "evisor"
@@ -17,5 +22,6 @@ const TEST_CONFIG = {
 module.exports = {
     SERVER_CONFIG,
     DATABASE_CONFIG,
-    TEST_CONFIG
+    TEST_CONFIG,
+    FILES_SERVICE_CONFIG,
 }

@@ -38,4 +38,11 @@ api.get('/getTramitesType', checkAuth, controller.getTramitesType);
 api.get('/getTramitePdf/:idDocumento', checkAuth, controller.getTramitePdf);
 api.delete('/deleteTramite/:idTramite/:idDocumento', checkAuth, controller.deleteTramite);
 
+// SUBDOCUMENTOS
+api.post('/createSubDocumento', checkAuth, controller.createSubDocumento);
+api.get('/getSubDocumentosTypes', checkAuth, controller.getSubDocumentosTypes);
+api.get('/getSubDocumentosTramite/:idTramite', checkAuth, controller.getSubDocumentosTramite);
+api.get('/getSubDocumento/:idSubDocumento', checkAuth, controller.getSubdocumentoPDF);
+api.delete('/deleteSubDocumento/:idSubDocumento/:idDocumento', checkAuth, controller.deleteSubDocumento);
+
 module.exports = api;

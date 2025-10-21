@@ -4,6 +4,7 @@ const api = express.Router();
 const estantesController = require('../controllers/estantes.controller');
 const cajasController = require('../controllers/cajas.controller');
 const tramitesController = require('../controllers/tramites.controller');
+const subDocumentosController = require('../controllers/subdocumentos.controller');
 const expedientesController = require('../controllers/expedientes.controller');
 
 // ESTANTES
@@ -41,5 +42,12 @@ api.post('/createTramite', tramitesController.createTramite);
 api.get('/getTramitesType', tramitesController.getTramitesType);
 api.get('/getTramitePdf/:idDocumento', tramitesController.getTramitePdf);
 api.delete('/deleteTramite/:idTramite/:idDocumento', tramitesController.deleteTramite);
+
+// SUB DOCUMENTOS
+api.post('/createSubDocumento', subDocumentosController.createSubDocumento);
+api.get('/getSubDocumentosTypes', subDocumentosController.getSubDocumentosType);
+api.get('/getSubDocumentosTramite/:idTramite', subDocumentosController.obtenerSubDocumentosTramite);
+api.get('/getSubDocumento/:idSubDocumento', subDocumentosController.getSubDocumentoPdf);
+api.delete('/deleteSubDocumento/:idSubDocumento/:idDocumento', subDocumentosController.deleteSubDocumento);
 
 module.exports = api;
