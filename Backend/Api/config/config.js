@@ -30,21 +30,16 @@ const SWAGGER_CONFIG = {
 const SERVER_CONFIG = {
     SERVER_PORT: process.env.SERVER_PORT || "3000",
     MS_DATOS: process.env.MS_DATOS || "http://131.107.5.82:3001",
-    MS_EXPEDIENTES: process.env.MS_EXPEDIENTES || "http://131.107.5.47:3002",
-    MS_DOCKFLOW: process.env.MS_DOCKFLOW || "http://131.107.5.106:3005",
+    MS_EXPEDIENTES: process.env.MS_EXPEDIENTES || "http://127.0.0.1:3002",
+    MS_DOCKFLOW: process.env.MS_DOCKFLOW || "http://127.0.0.1:3005",
     MS_LIBROS: process.env.MS_LIBROS || "",
     JWT_KEY: process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2"
 }
 
 const DATABASE_CONFIG = {
-    DATABASE_ADDR: process.env.DATABASE_ADDR || "131.107.5.106",
-    KEYSPACE: process.env.KEYSPACE || "sistema_nuevo"
+    DATABASE_ADDR: process.env.DATABASE_ADDR || "172.16.3.5",
+    KEYSPACE: process.env.KEYSPACE || "evisor"
 }
-
-const FILES_SERVICE_CONFIG = {
-    BASE_URL: (process.env.FILES_SERVICE_URL || 'http://localhost:3006').replace(/\/$/, ''),
-    BASE_PATH: process.env.FILES_BASE_PATH || 'C:/Documents'
-};
 
 const ADMIN_CONFIG = {
     ADMIN_USER: process.env.ADMIN_USER || "admin",
@@ -56,6 +51,5 @@ module.exports = {
     SWAGGER_CONFIG,
     SERVER_CONFIG,
     DATABASE_CONFIG,
-    ADMIN_CONFIG,
-    FILES_SERVICE_CONFIG
+    ADMIN_CONFIG
 }
