@@ -41,6 +41,11 @@ const DATABASE_CONFIG = {
     KEYSPACE: process.env.KEYSPACE || "sistema_nuevo"
 }
 
+const FILES_SERVICE_CONFIG = {
+    BASE_URL: (process.env.FILES_SERVICE_URL || 'http://localhost:3006').replace(/\/$/, ''),
+    BASE_PATH: process.env.FILES_BASE_PATH || 'C:/Documents'
+};
+
 const ADMIN_CONFIG = {
     ADMIN_USER: process.env.ADMIN_USER || "admin",
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "123456",
@@ -51,5 +56,6 @@ module.exports = {
     SWAGGER_CONFIG,
     SERVER_CONFIG,
     DATABASE_CONFIG,
-    ADMIN_CONFIG
+    ADMIN_CONFIG,
+    FILES_SERVICE_CONFIG
 }

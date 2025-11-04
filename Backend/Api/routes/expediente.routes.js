@@ -3,10 +3,10 @@ const { checkAuth } = require('../middleware/auth.js');
 const api = express.Router();
 const controller = require('../controllers/expediente.controller.js');
 
-api.post('/getExpediente', checkAuth, controller.getExpediente);
-api.get('/getTipoExpediente', checkAuth, controller.getTipoExpediente);
-api.get('/getSubtipoExpediente', checkAuth, controller.getSubTipoExpediente);
-api.post('/createExpediente', controller.createExpediente);
-api.delete('/deleteExpediente', controller.deleteExpediente);
+api.get('/getExpediente', checkAuth, controller.getExpediente);
+api.get('/getTiposExpediente', checkAuth, controller.getTiposExpediente);
+api.get('/getSubtiposExpediente', checkAuth, controller.getSubTiposExpediente);
+api.post('/createExpediente', checkAuth, controller.createExpediente);
+api.delete('/deleteExpediente', checkAuth, controller.deleteExpediente);
 
 module.exports = api;

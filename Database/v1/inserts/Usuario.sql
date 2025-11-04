@@ -1,5 +1,5 @@
-INSERT INTO evisor.Usuario (Id, IDTipoUsuario, Usuario, Nombre, Contrasenia) values (uuid(), b9e4a6da-b109-4c96-9b5e-42e7c8e12a47, 'josue.zea', 'Josué Zea', 'password123');
-INSERT INTO evisor.Usuario (Id, IDTipoUsuario, Usuario, Nombre, Contrasenia) values (uuid(), d1d81e0f-af9a-44db-9b5a-3287f1376de0, 'testuser', 'TestUser', 'test1234');
+INSERT INTO evisor.Usuario (Id, IDTipoUsuario, Usuario, Nombre, Contrasenia) values (uuid(), b9e4a6da-b109-4c96-9b5e-42e7c8e12a47, 'josue.zea', 'Josué Zea', '$2b$10$jiBKFSZVvaJOGhw68yS6CO5QBF1LBHkik0MBP94j7j11dTU3xMazK');
+INSERT INTO evisor.Usuario (Id, IDTipoUsuario, Usuario, Nombre, Contrasenia) values (uuid(), d1d81e0f-af9a-44db-9b5a-3287f1376de0, 'testuser', 'TestUser', '$2b$10$9qIjHCWJWC/.jx2bOKeoOuW7HcqwGUZilPANmZC01akhHOu9Bffxm');
 
 
 INSERT INTO evisor.Usuario (Id, IDTipoUsuario, Nombre) values (uuid(), d1d81e0f-af9a-44db-9b5a-3287f1376de0, 'David Herrera');

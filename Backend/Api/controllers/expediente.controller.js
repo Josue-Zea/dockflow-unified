@@ -1,110 +1,122 @@
 const { SERVER_CONFIG } = require("../config/config");
 const stream = require('stream');
 const { saveLog } = require('../utils/saveLog');
+const { savePdfInDatabase } = require("../utils/saveDocumentDatabase");
+const { lookInDatabase } = require("../utils/getExpedienteApi");
+const { deleteDocument } = require("../utils/deleteDocument");
+const { getTiposExpedienteDB, getSubtiposExpedienteDB } = require("../utils/getTiposExpediente");
 
 const getExpediente = async (req, res) => {
-    let code = 200, data = {};
-    const opciones = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(req.body)
-    };
-    const response = await fetch(
-        `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getExpediente`,
-        opciones
-    );
-    try {
-        if (response.ok) { //Algun error
-            const respuestaInfoHeader = response.headers.get('Respuesta-Info');
+    const { numero_expediente, anio_expediente } = req.query;
+
+    if (!numero_expediente || !anio_expediente) {
+        return res.status(400).send({ 
+            message: "Los parámetros numero_expediente y anio_expediente son requeridos" 
+        });
+    }
+
+    const result = await lookInDatabase(numero_expediente, anio_expediente);
+    if (result.correct) {
+        try {
+            const respuesta = {
+                empty: "false"
+            }
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'inline; filename=archivo.pdf');
-            res.setHeader("Access-Control-Expose-Headers", 'Respuesta-Info');
-            res.setHeader('Respuesta-Info', respuestaInfoHeader);
-    
+            res.setHeader('Content-Disposition', 'inline; filename=expediente.pdf');
+            res.setHeader('Respuesta-Info', JSON.stringify(respuesta));
+
             const bufferStream = new stream.PassThrough();
-            bufferStream.end(Buffer.from(await response.arrayBuffer()));
+            bufferStream.end(Buffer.from(result.data, 'base64'));
             bufferStream.pipe(res);
             res.status(200);
-            delete req.body.watermark;
-            saveLog(false, "CONSULTA", req.body, req);
             return;
-        } else {
-            code = 400;
+        } catch (err) {
+            res.status(501).send("Error en generacion de pdf");
+            console.log(err);
+            console.log("Error en generacion de pdf"); return;
         }
-    } catch (err) {
-        code = 500;
-        data = { err, message: "Error en MS-API, expedientes" };
     }
-    res.status(code).send(data);
+    res.status(400).send({ message: "Ocurrio algún error" });
 };
 
 const createExpediente = async (req, res) => {
-    const opciones = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(req.body)
-    };
-    const response = await fetch(
-        `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/createExpediente`,
-        opciones
-    );
-    res.status(response.status).send(response.data);
+    const { numero_expediente, anio_expediente, numerotramite = 1, iddocumento, idusuario, idtipodocumento, hojasdocumento, pesodocumento, idtipo, idsubtipo, idestado, idcaja, document } = req.body;
+
+    const result = await savePdfInDatabase(numero_expediente, anio_expediente, document, numerotramite, idtipo, idsubtipo);
+    if (result.correct) {
+        res.status(200).send({ message: "Expediente creado correctamente", iddocumento: result.id });
+    } else {
+        res.status(400).send({ message: "Ocurrio algún error" });
+    }
 };
 
 const deleteExpediente = async (req, res) => {
-    const opciones = {
-        method: "DELETE",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(req.body)
-    };
-    const response = await fetch(
-        `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/deleteExpediente`,
-        opciones
-    );
-    res.status(response.status).send(response.data);
+    const { numero_expediente, anio_expediente, iddocumento } = req.query;
+
+    if (!numero_expediente || !anio_expediente || !iddocumento) {
+        return res.status(400).send({ 
+            message: "Los parámetros numero_expediente, anio_expediente e iddocumento son requeridos" 
+        });
+    }
+
+    const result = await deleteDocument(numero_expediente, anio_expediente, 1, iddocumento);
+    if (result.correct) {
+        res.status(200).send({ message: "Expediente eliminado correctamente" });
+    } else {
+        res.status(400).send({ message: "Ocurrio algún error" });
+    }
 };
 
-const getTipoExpediente = async (req, res) => {
-    const opciones = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-    console.log(`${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getTipoExpediente`);
-    const response = await fetch(
-        `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getTipoExpediente`,
-        opciones
-    );
-    const data = await response.json();
-    res.status(response.status).send(data.data);
+const getTiposExpediente = async (_, res) => {
+    const result = await getTiposExpedienteDB();
+    if (result.correct) {
+        try {
+            res.status(200);
+            res.send(result);
+            return;
+        } catch (err) {
+            res.status(501).send("Error en getTipoExpediente");
+            console.log(err);
+        }
+    }
+    res.status(400).send("Ocurrio algún error");
 };
 
-const getSubTipoExpediente = async (req, res) => {
-    const opciones = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-    const response = await fetch(
-        `${SERVER_CONFIG.MS_EXPEDIENTES}/expedientes/getSubTipoExpediente`,
-        opciones
-    );
-    const data = await response.json();
-    res.status(response.status).send(data.data);
+const getSubTiposExpediente = async (req, res) => {
+    const result = await getSubtiposExpedienteDB();
+    if (result.correct) {
+        try {
+            res.status(200);
+            res.send(result);
+            return;
+        } catch (err) {
+            res.status(501).send("Error en getTipoExpediente");
+            console.log(err);
+        }
+    }
+    res.status(400).send("Ocurrio algún error");
+};
+
+const getExpedientesSinCaja = async (req, res) => {
+    let code = 0, data = { message: "" };
+    try {
+        const result = await getExpedientesSinCajaDatabase(idEstante, idCaja);
+        if (result.correct) {
+            code = 200; data = result.data;
+        } else {
+            code = 400; data = { message: "Ocurrió algún error" };
+        }
+    } catch (err) {
+        console.log(err);
+        code = 500; data = { message: "Ocurrió algún error" };
+    }
+    res.status(code).send(data);
 };
 
 module.exports = {
     getExpediente,
     createExpediente,
     deleteExpediente,
-    getTipoExpediente,
-    getSubTipoExpediente
+    getTiposExpediente,
+    getSubTiposExpediente
 };

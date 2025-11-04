@@ -11,13 +11,13 @@ app.use(express.urlencoded({limit: '100mb'}));
 app.use('/dockflow', require('./routes/dockflow.routes'));
 global.token = '';
 
+const port = SERVER_CONFIG.SERVER_PORT;
 app.get("/", (req, res) => {
   res.send({
     "mensaje": `Servidor en puerto ${port}`
   });
 });
 
-const port = SERVER_CONFIG.SERVER_PORT;
 const server = http.createServer(app);
 
 server.listen(port, async () => {

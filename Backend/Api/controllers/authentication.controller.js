@@ -1,6 +1,5 @@
 const { signToken } = require('../helpers/JWT');
 const { loginUsernamePasswordApi } = require('../utils/loginUsernamePasswordApi');
-const { saveLog } = require('../utils/saveLog');
 
 const loginUsernamePassword = async (req, res) => {
     const { username, password } = req.body;
@@ -22,7 +21,6 @@ const loginUsernamePassword = async (req, res) => {
         code = 500; data = { message: "Ocurrió algún error" };
     }
     res.status(code).send(data);
-    saveLog(true, "LOGIN", req.body, null);
 };
 
 module.exports = {
