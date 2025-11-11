@@ -3,29 +3,44 @@ const { obtenerSubDocumentoPdfDatabase } = require("../utils/obtenerSubDocumento
 const { obtenerSubDocumentosTramiteDatabase } = require("../utils/obtenerSubDocumentosTramiteDatabase");
 const { obtenerSubDocumentosTypeDatabase } = require("../utils/obtenerSubDocumentosTypeDatabase");
 const { saveSubDocumentInDatabase } = require("../utils/saveSubDocumentoDatabase");
-const { saveDocumentInServer } = require("../utils/filesService");
+const { saveDocumentInServer, saveDocumentLocally } = require("../utils/filesService");
 const { asyncHandler } = require("../helpers/responseHandler");
 
 const createSubDocumento = asyncHandler(async (req, res) => {
-    const { idtramitepadre, pdfbase64, nombre, fecha, tiposubdocumento, nombretiposubdocumento } = req.body;
-    
+    const {
+        idtramitepadre,
+        pdfbase64,
+        nombre,
+        fecha,
+        tiposubdocumento,
+        saveInServer = false,
+        nombrePdf = null,
+        nombretiposubdocumento
+    } = req.body;
+
     const result = await saveSubDocumentInDatabase(idtramitepadre, pdfbase64, nombre, fecha, tiposubdocumento, nombretiposubdocumento);
-    
+
     if (result.correct) {
         const documentTypeForServer = nombretiposubdocumento || tiposubdocumento;
         try {
-            const serverResponse = await saveDocumentInServer({
-                documentName: result.id,
-                documentType: documentTypeForServer,
-                pdfBase64: pdfbase64,
-            });
+            let serverResponse;
+            if (saveInServer) {
+                serverResponse = await saveDocumentInServer({
+                    documentName: nombrePdf || result.id,
+                    documentType: documentTypeForServer,
+                    pdfBase64: pdfbase64,
+                });
+            }
 
             return res.status(200).json({
                 success: true,
                 message: "Subdocumento creado correctamente",
                 data: {
                     id: result.id,
-                    filePath: serverResponse.absolutePath || serverResponse.path || null,
+                    filePath:
+                        saveInServer
+                            ? serverResponse.absolutePath || serverResponse.path || null
+                            : null,
                 }
             });
         } catch (error) {
@@ -49,7 +64,7 @@ const createSubDocumento = asyncHandler(async (req, res) => {
 const obtenerSubDocumentosTramite = asyncHandler(async (req, res) => {
     const { idTramite } = req.query;
     const result = await obtenerSubDocumentosTramiteDatabase(idTramite);
-    
+
     if (result.correct) {
         res.status(200).json({
             success: true,
@@ -67,7 +82,7 @@ const obtenerSubDocumentosTramite = asyncHandler(async (req, res) => {
 
 const getSubDocumentosType = asyncHandler(async (req, res) => {
     const result = await obtenerSubDocumentosTypeDatabase();
-    
+
     if (result.correct) {
         res.status(200).json({
             success: true,
@@ -85,7 +100,7 @@ const getSubDocumentosType = asyncHandler(async (req, res) => {
 const getSubDocumentoPdf = asyncHandler(async (req, res) => {
     const { idsubdocumento } = req.query;
     const result = await obtenerSubDocumentoPdfDatabase(idsubdocumento);
-    
+
     if (result.correct) {
         res.status(200).json({
             success: true,
@@ -104,7 +119,7 @@ const getSubDocumentoPdf = asyncHandler(async (req, res) => {
 const deleteSubDocumento = asyncHandler(async (req, res) => {
     const { idSubDocumento, idDocumento } = req.query;
     const result = await eliminarSubDocumentoDatabase(idSubDocumento, idDocumento);
-    
+
     if (result.correct) {
         res.status(200).json({
             success: true,

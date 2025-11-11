@@ -15,11 +15,35 @@ const sanitizeSegment = (segment = '') => segment
   .replace(/\s+/g, ' ')
   .trim();
 
+// Sanitize a single folder segment, allowing subfolders in documentType.
+const sanitizeFolderSegment = (segment = '') => {
+  // basic trim and collapse spaces
+  let seg = String(segment || '').replace(/\\/g, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
+  if (!seg) return null;
+  // disallow current/parent refs
+  if (seg === '.' || seg === '..') return null;
+  // remove characters invalid on Windows folder names: <> : " / \ | ? * and control chars
+  seg = seg.replace(/[<>:\"\\/\|\?\*\x00-\x1F]/g, '');
+  // Trim again
+  seg = seg.trim();
+  if (!seg) return null;
+  // disallow reserved names
+  if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(seg)) return null;
+  // disallow leading/trailing spaces or dots
+  if (/^[ .]|[ .]$/.test(seg)) return null;
+  // length guard
+  if (seg.length > 255) return null;
+  return seg;
+};
+
 const sanitizeFileName = (name = '') => sanitizeSegment(name).replace(/[^a-zA-Z0-9._ -]/g, '');
 
 const buildFilePath = (documentType, documentName) => {
-  const safeFolder = sanitizeSegment(documentType || 'default');
-  if (!safeFolder) {
+  // Allow documentType to contain subfolders separated by '/' or '\\'
+  const raw = documentType || 'default';
+  const parts = String(raw).split(/[\\/]+/).map(p => p.trim()).filter(Boolean);
+  const safeParts = parts.map(p => sanitizeFolderSegment(p)).filter(Boolean);
+  if (!safeParts || safeParts.length === 0) {
     throw new Error('INVALID_FOLDER');
   }
 
@@ -28,7 +52,7 @@ const buildFilePath = (documentType, documentName) => {
     throw new Error('INVALID_FILENAME');
   }
 
-  const folderPath = path.join(FILES_CONFIG.BASE_PATH, safeFolder);
+  const folderPath = path.join(FILES_CONFIG.BASE_PATH, ...safeParts);
   const filePath = path.join(folderPath, safeFileName);
   return { folderPath, filePath };
 };

@@ -25,7 +25,7 @@ const SWAGGER_CONFIG = {
     apis: [
         `${path.join(__dirname, "../documentation/*.js")}`
     ]
-}
+};
 
 const SERVER_CONFIG = {
     SERVER_PORT: process.env.SERVER_PORT || "3000",
@@ -33,19 +33,22 @@ const SERVER_CONFIG = {
     MS_EXPEDIENTES: process.env.MS_EXPEDIENTES || "http://127.0.0.1:3002",
     MS_DOCKFLOW: process.env.MS_DOCKFLOW || "http://127.0.0.1:3005",
     MS_LIBROS: process.env.MS_LIBROS || "",
-    JWT_KEY: process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2"
-}
+    JWT_KEY: process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2",
+    TOKEN_EXPIRES_IN: process.env.TOKEN_EXPIRES_IN || "24h",
+    REFRESH_JWT_KEY: process.env.REFRESH_JWT_KEY || (process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2"),
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || "7d"
+};
 
 const DATABASE_CONFIG = {
     DATABASE_ADDR: process.env.DATABASE_ADDR || "172.16.3.5",
     KEYSPACE: process.env.KEYSPACE || "evisor"
-}
+};
 
 const ADMIN_CONFIG = {
     ADMIN_USER: process.env.ADMIN_USER || "admin",
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "123456",
     SAMPLE_TOKEN: process.env.SAMPLE_TOKEN || ""
-}
+};
 
 const FILES_SERVICE_CONFIG = {
     BASE_URL: (process.env.FILES_SERVICE_URL || 'http://localhost:3006').replace(/\/$/, ''),
