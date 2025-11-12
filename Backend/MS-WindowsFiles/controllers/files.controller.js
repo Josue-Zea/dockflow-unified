@@ -2,11 +2,11 @@ const fs = require('fs/promises');
 const path = require('path');
 const { FILES_CONFIG } = require('../config/config');
 
-const ensurePdfExtension = (name) => {
-  if (!name.toLowerCase().endsWith('.pdf')) {
-    return `${name}.pdf`;
-  }
-  return name;
+// Keep filename as provided. If missing extension, leave it as-is.
+const ensureHasExtension = (name) => {
+  if (!name || typeof name !== 'string') return name;
+  const hasDot = /\.[^./\\]+$/.test(name);
+  return hasDot ? name : name; // do not force any extension
 };
 
 const sanitizeSegment = (segment = '') => segment
@@ -36,7 +36,19 @@ const sanitizeFolderSegment = (segment = '') => {
   return seg;
 };
 
-const sanitizeFileName = (name = '') => sanitizeSegment(name).replace(/[^a-zA-Z0-9._ -]/g, '');
+const sanitizeFileName = (name = '') => {
+  // preserve extension if any, but sanitize each part
+  const raw = String(name || '').trim();
+  const lastDot = raw.lastIndexOf('.');
+  if (lastDot > 0) {
+    const base = raw.slice(0, lastDot);
+    const ext = raw.slice(lastDot + 1);
+    const safeBase = sanitizeSegment(base).replace(/[^a-zA-Z0-9._ -]/g, '');
+    const safeExt = sanitizeSegment(ext).replace(/[^a-zA-Z0-9]/g, '');
+    return `${safeBase}.${safeExt}`;
+  }
+  return sanitizeSegment(raw).replace(/[^a-zA-Z0-9._ -]/g, '');
+};
 
 const buildFilePath = (documentType, documentName) => {
   // Allow documentType to contain subfolders separated by '/' or '\\'
@@ -47,7 +59,7 @@ const buildFilePath = (documentType, documentName) => {
     throw new Error('INVALID_FOLDER');
   }
 
-  const safeFileName = sanitizeFileName(ensurePdfExtension(documentName));
+  const safeFileName = sanitizeFileName(ensureHasExtension(documentName));
   if (!safeFileName) {
     throw new Error('INVALID_FILENAME');
   }
@@ -58,20 +70,20 @@ const buildFilePath = (documentType, documentName) => {
 };
 
 const extractBase64Payload = (encoded) => {
-  if (!encoded) {
-    return encoded;
-  }
-  const parts = encoded.split(',');
-  return parts.length > 1 ? parts.pop().trim() : encoded.trim();
+  if (!encoded) return encoded;
+  const parts = String(encoded).split(',');
+  return parts.length > 1 ? parts.pop().trim() : String(encoded).trim();
 };
 
 const saveDocument = async (req, res) => {
   try {
-    const { pdfBase64, documentName, documentType } = req.body || {};
+    // Accept either pdfBase64 or fileBase64 for backward compatibility
+    const { pdfBase64, fileBase64, documentName, documentType } = req.body || {};
+    const base64payload = pdfBase64 || fileBase64;
 
-    if (!pdfBase64 || !documentName || !documentType) {
+    if (!base64payload || !documentName || !documentType) {
       return res.status(400).json({
-        message: 'pdfBase64, documentName y documentType son obligatorios',
+        message: 'fileBase64 (o pdfBase64), documentName y documentType son obligatorios',
       });
     }
 
@@ -88,7 +100,7 @@ const saveDocument = async (req, res) => {
       throw pathError;
     }
     await fs.mkdir(folderPath, { recursive: true });
-    const buffer = Buffer.from(extractBase64Payload(pdfBase64), 'base64');
+    const buffer = Buffer.from(extractBase64Payload(base64payload), 'base64');
     await fs.writeFile(filePath, buffer);
 
     return res.status(201).json({
@@ -183,9 +195,9 @@ const getDocument = async (req, res) => {
     }
 
     return res.status(200).json({
-      documentName: sanitizeFileName(ensurePdfExtension(documentName)),
+      documentName: sanitizeFileName(ensureHasExtension(documentName)),
       documentType: sanitizeSegment(documentType),
-      pdfBase64: buffer.toString('base64'),
+      fileBase64: buffer.toString('base64'),
       absolutePath: filePath,
     });
   } catch (error) {

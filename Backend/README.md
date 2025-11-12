@@ -1,7 +1,3 @@
-Codigos de error
-
-200 Todo bien
-
-401 Autenticacion fallida
-
-500 Error del servidor
+Versiones de Backend
+Api: 2.0.1
+Windows_Server: 1.0.5

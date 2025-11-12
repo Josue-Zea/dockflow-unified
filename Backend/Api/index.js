@@ -10,6 +10,7 @@ const swaggerSpec = SWAGGER_CONFIG;
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const { client } = require("./database/conection");
+const { healthCheckWindowsServer } = require("./utils/healthCheckWindowsServer");
 
 // Middlewares
 app.use(cors());
@@ -38,17 +39,39 @@ app.get('/health', async (req, res) => {
   const health = {
     uptime: process.uptime(),
     timestamp: Date.now(),
-    status: 'OK',
-    services: {}
+    status: 'UNKNOWN',
+    version: SERVER_CONFIG.API_VERSION,
+    services: {},
+  };
+
+  const withTimeout = (promise, ms) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), ms)),
+    ]);
   };
 
   try {
-    await client.execute('SELECT now() FROM system.local');
-    health.services.cassandra = 'UP';
-  } catch (error) {
-    health.services.cassandra = 'DOWN';
-    health.status = 'DEGRADED';
+    await withTimeout(client.execute('SELECT now() FROM system.local'), 3000);
+    health.services.cassandra = { status: 'UP' };
+  } catch (err) {
+    console.error('Health check cassandra failed:', err && err.message ? err.message : err);
+    health.services.cassandra = { status: 'DOWN', error: err && err.message };
   }
+
+  try {
+    const windowsHealth = await withTimeout(healthCheckWindowsServer(), 3000);
+    health.services.windowsServer = {
+      status: windowsHealth && windowsHealth.status ? windowsHealth.status : 'UNKNOWN',
+      version: windowsHealth && windowsHealth.version ? windowsHealth.version : null,
+    };
+  } catch (err) {
+    console.error('Health check windows server failed:', err && err.message ? err.message : err);
+    health.services.windowsServer = { status: 'DOWN', error: err && err.message };
+  }
+
+  const anyDown = Object.values(health.services).some(s => s && s.status === 'DOWN');
+  health.status = anyDown ? 'DEGRADED' : 'OK';
 
   const statusCode = health.status === 'OK' ? 200 : 503;
   res.status(statusCode).json(health);

@@ -5,6 +5,7 @@ dotenv.config();
 
 const SERVER_CONFIG = {
   PORT: process.env.SERVER_PORT || '3006',
+  WINDOWS_SERVER_VERSION: process.env.WINDOWS_SERVER_VERSION || '1.0.0',
 };
 
 const FILES_CONFIG = {

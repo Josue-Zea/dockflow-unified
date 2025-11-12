@@ -28,6 +28,7 @@ const SWAGGER_CONFIG = {
 };
 
 const SERVER_CONFIG = {
+    API_VERSION: process.env.API_VERSION || "1.0.0",
     SERVER_PORT: process.env.SERVER_PORT || "3000",
     MS_DATOS: process.env.MS_DATOS || "http://131.107.5.82:3001",
     MS_EXPEDIENTES: process.env.MS_EXPEDIENTES || "http://127.0.0.1:3002",

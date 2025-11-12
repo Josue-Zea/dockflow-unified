@@ -16,6 +16,19 @@ app.get('/', (req, res) => {
   res.json({ message: `Servidor en puerto ${SERVER_CONFIG.PORT}` });
 });
 
+app.get('/health', async (req, res) => {
+  const health = {
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    status: 'OK',
+    version: SERVER_CONFIG.WINDOWS_SERVER_VERSION,
+    services: {}
+  };
+
+  const statusCode = health.status === 'OK' ? 200 : 503;
+  res.status(statusCode).json(health);
+});
+
 const server = http.createServer(app);
 
 server.listen(SERVER_CONFIG.PORT, () => {
