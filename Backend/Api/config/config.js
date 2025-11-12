@@ -52,7 +52,7 @@ const ADMIN_CONFIG = {
 };
 
 const FILES_SERVICE_CONFIG = {
-    BASE_URL: (process.env.FILES_SERVICE_URL || 'http://localhost:3006').replace(/\/$/, ''),
+    BASE_URL: (process.env.FILES_SERVICE_URL || 'http://172.16.0.5:3002').replace(/\/$/, ''),
     BASE_PATH: process.env.FILES_BASE_PATH || 'C:/Documents'
 };
 
