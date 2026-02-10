@@ -5,10 +5,10 @@ const {
   deleteDocument,
   getDocument,
 } = require('../controllers/files.controller');
+const { checkAuth } = require('../middleware/auth');
 
-
-router.post('/document', saveDocument);
-router.delete('/document/:documentName/:documentType', deleteDocument);
-router.get('/document/:documentName/:documentType', getDocument);
+router.post('/document', checkAuth, saveDocument);
+router.delete('/document', checkAuth, deleteDocument);
+router.get('/document', checkAuth, getDocument);
 
 module.exports = router;

@@ -14,5 +14,9 @@ api.put('/caja', checkAuth, cajasController.updateCaja);
 api.delete('/caja', checkAuth, cajasController.deleteCaja);
 api.post('/agregarExpedienteCaja', checkAuth, cajasController.addExpedienteCaja);
 api.delete('/removerExpedienteCaja', checkAuth, cajasController.removeExpedienteCaja);
+api.get('/getExpedientes', checkAuth, cajasController.getExpedientes);
+api.get('/getExpediente', checkAuth, cajasController.getExpediente);
+api.get('/getDocumento', checkAuth, cajasController.getDocumento);
+api.get('/getAllExpedientes', checkAuth, cajasController.getAllExpedientes);
 
 module.exports = api;

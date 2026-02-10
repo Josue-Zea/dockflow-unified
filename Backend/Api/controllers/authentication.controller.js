@@ -1,6 +1,7 @@
 const { SERVER_CONFIG } = require('../config/config');
 const { signToken, signRefreshToken, verifyRefreshToken } = require('../helpers/JWT');
 const { loginUsernamePasswordApi } = require('../utils/loginUsernamePasswordApi');
+const logger = require('../helpers/logger');
 
 const loginUsernamePassword = async (req, res) => {
     const { username, password } = req.body;
@@ -21,7 +22,7 @@ const loginUsernamePassword = async (req, res) => {
             code = 401; data = { message: "Usuario o contraseña incorrectos" };
         }
     } catch (err) {
-        console.log(err);
+        logger.logError(err, { context: 'loginUsernamePassword' });
         code = 500; data = { message: "Ocurrió algún error" };
     }
     res.status(code).send(data);
@@ -40,7 +41,7 @@ const refreshToken = async (req, res) => {
 
         return res.status(200).send({ token: newAccessToken, expiraEn: SERVER_CONFIG.TOKEN_EXPIRES_IN, refreshToken: newRefreshToken, refreshExpiraEn: SERVER_CONFIG.REFRESH_TOKEN_EXPIRES_IN });
     } catch (err) {
-        console.log(err);
+        logger.logError(err, { context: 'refreshToken' });
         return res.status(500).send({ message: 'Ocurrió algún error al procesar el refresh token' });
     }
 }

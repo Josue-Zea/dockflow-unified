@@ -1,3 +1,0 @@
-docker build -t rocket1530/ms-dockflow .
-
-docker push rocket1530/ms-dockflow

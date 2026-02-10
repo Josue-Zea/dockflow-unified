@@ -1,7 +1,8 @@
 const { saveDocumentInServer } = require("../utils/filesService");
 const { asyncHandler } = require("../helpers/responseHandler");
+const logger = require('../helpers/logger');
 const { saveFileDatabase } = require("../utils/saveFileDatabase");
-const { getDocumentFromDBB64 } = require("../utils/getDocumentFromDBB64");
+const { getDocumentFromDB } = require("../utils/getDocumentFromDB");
 
 const cargarArchivo = asyncHandler(async (req, res) => {
     const {
@@ -18,14 +19,16 @@ const cargarArchivo = asyncHandler(async (req, res) => {
         let serverResponse = {};
         try {
             if (guardarservidor) {
+                const token = req.headers.authorization.split(' ')[1];
                 serverResponse = await saveDocumentInServer({
                     documentName: result.id,
-                    documentType: documentTypeForServer,
+                    documentType: tipotramite,
                     pdfBase64: pdfbase64,
+                    token,
                 });
             }
         } catch (error) {
-            console.error("Error al cargar el archivo en el servidor de archivos:", error);
+            logger.logError(error, { context: 'cargarArchivo', action: 'guardar en servidor' });
             return res.status(500).json({
                 success: false,
                 message: "Archivo almacenado en base de datos pero ocurrió un error al guardar el archivo en el servidor",
@@ -52,7 +55,7 @@ const cargarArchivo = asyncHandler(async (req, res) => {
 
 const getDocumentoCargado = asyncHandler(async (req, res) => {
     const { idDocumento } = req.query;
-    const result = await getDocumentFromDBB64(idDocumento);
+    const result = await getDocumentFromDB(idDocumento);
 
     if (result !== "") {
         res.status(200).json({

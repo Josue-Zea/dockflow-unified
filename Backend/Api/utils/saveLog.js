@@ -1,5 +1,6 @@
 const { createUUID, client } = require("../database/conection");
 const { getPayloadToken } = require("../helpers/getPayloadToken");
+const logger = require('../helpers/logger');
 
 const saveLog = async (login, operacion, descripcion, request) => {
     const consulta = login ? "INSERT INTO Bitacora (Id, Fecha, Operacion, Descripcion) VALUES (?, ?, ?, ?)"
@@ -22,7 +23,7 @@ const saveLog = async (login, operacion, descripcion, request) => {
             { prepare: true }
         );
     } catch (err) {
-        console.error('Error al insertar en la tabla Bitacora:', err);
+        logger.logError(err, { context: 'saveLog', table: 'Bitacora' });
     }
 }
 

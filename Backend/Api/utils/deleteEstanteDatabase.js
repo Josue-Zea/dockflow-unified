@@ -12,7 +12,7 @@ const deleteEstanteDatabase = async (uuidEstante) => {
 
     return {
         correct: true,
-        data: result
+        data: { id: uuidEstante }
     };
 };
 

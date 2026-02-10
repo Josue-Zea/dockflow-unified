@@ -3,8 +3,9 @@ const api = express.Router();
 const controller = require('../controllers/authentication.controller.js');
 const { validateAuth } = require('../validators/auth.validation.js');
 const { validateRefresh } = require('../validators/refresh.validation.js');
+const { authLimiter } = require('../middleware/rateLimiter');
 
-api.post('/login', validateAuth, controller.loginUsernamePassword);
-api.post('/refreshToken', validateRefresh, controller.refreshToken);
+api.post('/login', authLimiter, validateAuth, controller.loginUsernamePassword);
+api.post('/refreshToken', authLimiter, validateRefresh, controller.refreshToken);
 
 module.exports = api;

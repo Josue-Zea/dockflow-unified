@@ -12,7 +12,7 @@ const updateEstanteDatabase = async (uuidEstante, nombre, ejex, ejey, ejez, alto
     }
     return {
         correct: true,
-        data: result
+        data: { id: uuidEstante, nombre, ejex, ejey, ejez, alto, ancho }
     };
 }
 

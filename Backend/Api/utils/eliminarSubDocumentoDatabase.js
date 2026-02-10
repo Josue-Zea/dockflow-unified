@@ -1,21 +1,36 @@
 const { client } = require("../database/conection");
+const logger = require('../helpers/logger');
 
 const eliminarSubDocumentoDatabase = async (idsubdocumento, iddocumento) => {
-    const query =
-    "DELETE FROM subdocumento WHERE id = ?";
-    const result = await client.execute(query, [idsubdocumento], { prepare: true });
+    try {
+        // Eliminar el registro del subdocumento
+        const querySubDoc = "DELETE FROM subdocumento WHERE id = ?";
+        const resultSubDoc = await client.execute(querySubDoc, [idsubdocumento], { prepare: true });
 
-    const queryDoc =
-    "DELETE FROM documento WHERE iddocumento = ?";
-    const resultDoc = await client.execute(queryDoc, [iddocumento], { prepare: true });
+        if (resultSubDoc.hasError) {
+            throw new Error(resultSubDoc.error);
+        }
 
-    if (result.hasError || resultDoc.hasError) {
-        throw new Error(result.error || resultDoc.error);
+        // Eliminar todos los chunks del documento asociado
+        const queryChunks = "SELECT NumeroParte FROM Documento WHERE IDDocumento = ?";
+        const chunks = await client.execute(queryChunks, [iddocumento], { prepare: true });
+
+        const deleteChunkQuery = "DELETE FROM Documento WHERE IDDocumento = ? AND NumeroParte = ?";
+        for (const row of chunks.rows) {
+            await client.execute(deleteChunkQuery, [iddocumento, row.numeroparte], { prepare: true });
+        }
+
+        return {
+            correct: true,
+            data: null
+        };
+    } catch (error) {
+        logger.logError(error, { context: 'eliminarSubDocumentoDatabase' });
+        return {
+            correct: false,
+            error: error.message
+        };
     }
-    return {
-        correct: true,
-        data: result.rows
-    };
 };
 
 module.exports = {

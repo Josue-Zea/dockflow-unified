@@ -10,8 +10,6 @@ app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use('/files', require('./routes/files.routes'));
 
-global.token = '';
-
 app.get('/', (req, res) => {
   res.json({ message: `Servidor en puerto ${SERVER_CONFIG.PORT}` });
 });

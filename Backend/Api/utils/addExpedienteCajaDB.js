@@ -1,4 +1,5 @@
 const { client } = require('../database/conection');
+const logger = require('../helpers/logger');
 
 const addExpedienteCajaDB = async (idCaja, idDocumentoExpediente) => {
     try {
@@ -6,6 +7,12 @@ const addExpedienteCajaDB = async (idCaja, idDocumentoExpediente) => {
             SELECT numero, anio FROM expediente WHERE iddocumento = ? ALLOW FILTERING
         `;
         const result = await client.execute(getNumeroAnioQuery, [idDocumentoExpediente], { prepare: true });
+        if (result.rowLength === 0) {
+            return {
+                correct: false,
+                data: { message: "No se encontró el expediente" }
+            };
+        }
         const expediente = result.rows[0];
 
         const updateQuery = `
@@ -22,7 +29,7 @@ const addExpedienteCajaDB = async (idCaja, idDocumentoExpediente) => {
             error: null
         };
     } catch (error) {
-        console.error('Error al agregar expediente:', error);
+        logger.logError(error, { context: 'addExpedienteCajaDB' });
         return {
             correct: false,
             error: error

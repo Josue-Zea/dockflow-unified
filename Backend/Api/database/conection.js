@@ -11,7 +11,14 @@ let client = new cassandra.Client({
     localDataCenter: 'datacenter1',
     // authProvider,
     socketOptions: {
-        readTimeout: 3600000,
+        readTimeout: 30000,
+    },
+    pooling: {
+        coreConnectionsPerHost: {
+            [cassandra.types.distance.local]: 2,
+            [cassandra.types.distance.remote]: 1,
+        },
+        maxRequestsPerConnection: 32768,
     },
 });
 

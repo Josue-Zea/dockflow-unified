@@ -3,15 +3,16 @@ const { deleteCajaDatabase } = require("../utils/deleteCajaDatabase");
 const { getCajasDatabase } = require("../utils/getCajasDatabase");
 const { getCajasSinEstanteDatabase } = require("../utils/getCajasSinEstanteDatabase");
 const { updateCajaDatabase } = require("../utils/updateCajaDatabase");
-const { getExpedientesFromSpecificBox } = require("../utils/getExpedientesDatabase");
+const { getExpedientesFromSpecificBox, getExpedientesDatabase, getAllExpedientesDatabase } = require("../utils/getExpedientesDatabase");
+const { getExpedienteMetadata, getExpedienteMetadataFile } = require("../utils/getExpedienteMetadata");
 const { addExpedienteCajaDB } = require("../utils/addExpedienteCajaDB");
 const { removeExpedienteCajaDB } = require("../utils/removeExpedienteCajaDB");
 const { changeFullBoxStatusDatabase } = require("../utils/changeFullBoxStatusDatabase");
 const { asyncHandler, handleDatabaseResult } = require("../helpers/responseHandler");
 
 const getCajas = asyncHandler(async (req, res) => {
-    const { idEstante } = req.query;
-    const result = await getCajasDatabase(idEstante);
+    const { idCaja } = req.query;
+    const result = await getCajasDatabase(idCaja);
     handleDatabaseResult(res, result, {
         success: 'Cajas obtenidas correctamente',
         error: 'Error al obtener las cajas'
@@ -73,8 +74,8 @@ const deleteCaja = asyncHandler(async (req, res) => {
 });
 
 const addExpedienteCaja = asyncHandler(async (req, res) => {
-    const { idCaja, idDocumentoExpediente } = req.query;
-    const result = await addExpedienteCajaDB(idCaja, idDocumentoExpediente);
+    const { idCaja, idDocumentoExpediente, idExpediente } = req.query;
+    const result = await addExpedienteCajaDB(idCaja, idDocumentoExpediente || idExpediente);
     handleDatabaseResult(res, result, {
         success: 'Expediente agregado a la caja correctamente',
         error: 'Error al agregar expediente a la caja'
@@ -82,11 +83,46 @@ const addExpedienteCaja = asyncHandler(async (req, res) => {
 });
 
 const removeExpedienteCaja = asyncHandler(async (req, res) => {
-    const { idDocumentoExpediente } = req.query;
-    const result = await removeExpedienteCajaDB(idDocumentoExpediente);
+    const { idDocumentoExpediente, idExpediente } = req.query;
+    const result = await removeExpedienteCajaDB(idDocumentoExpediente || idExpediente);
     handleDatabaseResult(res, result, {
         success: 'Expediente removido de la caja correctamente',
         error: 'Error al remover expediente de la caja'
+    });
+});
+
+const getExpedientes = asyncHandler(async (req, res) => {
+    const { idEstante, idCaja } = req.query;
+    const result = await getExpedientesDatabase(idEstante, idCaja);
+    handleDatabaseResult(res, result, {
+        success: 'Expedientes obtenidos correctamente',
+        error: 'Error al obtener los expedientes'
+    });
+});
+
+const getExpediente = asyncHandler(async (req, res) => {
+    const { numero, anio } = req.query;
+    const result = await getExpedienteMetadata(numero, anio);
+    handleDatabaseResult(res, result, {
+        success: 'Expediente obtenido correctamente',
+        error: 'Error al obtener el expediente'
+    });
+});
+
+const getDocumento = asyncHandler(async (req, res) => {
+    const { idDocumento } = req.query;
+    const result = await getExpedienteMetadataFile(idDocumento);
+    handleDatabaseResult(res, result, {
+        success: 'Documento obtenido correctamente',
+        error: 'Error al obtener el documento'
+    });
+});
+
+const getAllExpedientes = asyncHandler(async (req, res) => {
+    const result = await getAllExpedientesDatabase();
+    handleDatabaseResult(res, result, {
+        success: 'Expedientes obtenidos correctamente',
+        error: 'Error al obtener los expedientes'
     });
 });
 
@@ -99,5 +135,9 @@ module.exports = {
     addExpedienteCaja,
     removeExpedienteCaja,
     getExpedientesFromCaja,
-    changeFullBoxStatus
+    changeFullBoxStatus,
+    getExpedientes,
+    getExpediente,
+    getDocumento,
+    getAllExpedientes
 };

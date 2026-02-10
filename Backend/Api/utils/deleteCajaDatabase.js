@@ -12,7 +12,7 @@ const deleteCajaDatabase = async (idCaja) => {
 
     return {
         correct: true,
-        data: result
+        data: { idCaja }
     };
 };
 

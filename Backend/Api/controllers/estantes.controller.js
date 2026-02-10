@@ -50,10 +50,31 @@ const deleteEstante = asyncHandler(async (req, res) => {
     });
 });
 
+const addCajaEstante = asyncHandler(async (req, res) => {
+    const { nombre, ejex, ejey, ejez } = req.body;
+    const { idEstante } = req.query;
+    const result = await updateEstanteDatabase(idEstante, nombre, ejex, ejey, ejez);
+    handleDatabaseResult(res, result, {
+        success: 'Estante actualizado correctamente',
+        error: 'Error al actualizar el estante'
+    });
+});
+
+const removeCajaEstante = asyncHandler(async (req, res) => {
+    const { idEstante } = req.query;
+    const result = await deleteEstanteDatabase(idEstante);
+    handleDatabaseResult(res, result, {
+        success: 'Estante eliminado correctamente',
+        error: 'Error al eliminar el estante'
+    });
+});
+
 module.exports = {
     getEstantes,
     getEstantesNivel,
     createEstante,
     updateEstante,
-    deleteEstante
+    deleteEstante,
+    addCajaEstante,
+    removeCajaEstante
 };

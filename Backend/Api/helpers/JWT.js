@@ -4,7 +4,7 @@ const { SERVER_CONFIG } = require("../config/config");
 // Verifica access token
 const verifyToken = async (token) => {
     try {
-        return jwt.verify(token, SERVER_CONFIG.JWT_KEY);
+        return jwt.verify(token, SERVER_CONFIG.JWT_KEY, { algorithms: ['HS256'] });
     } catch (e) {
         // evitar console.log en favor del logger en controladores
         return null;
@@ -16,6 +16,7 @@ const signToken = (data) => {
     const newData = { ...data };
     const opcionesToken = {
         expiresIn: SERVER_CONFIG.TOKEN_EXPIRES_IN,
+        algorithm: 'HS256',
     };
     return jwt.sign(newData, SERVER_CONFIG.JWT_KEY, opcionesToken);
 }
@@ -25,6 +26,7 @@ const signRefreshToken = (data) => {
     const newData = { ...data };
     const opcionesToken = {
         expiresIn: SERVER_CONFIG.REFRESH_TOKEN_EXPIRES_IN,
+        algorithm: 'HS256',
     };
     return jwt.sign(newData, SERVER_CONFIG.REFRESH_JWT_KEY, opcionesToken);
 }
@@ -32,7 +34,7 @@ const signRefreshToken = (data) => {
 // Verifica refresh token
 const verifyRefreshToken = async (token) => {
     try {
-        return jwt.verify(token, SERVER_CONFIG.REFRESH_JWT_KEY);
+        return jwt.verify(token, SERVER_CONFIG.REFRESH_JWT_KEY, { algorithms: ['HS256'] });
     } catch (e) {
         return null;
     }

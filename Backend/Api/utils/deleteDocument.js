@@ -1,4 +1,5 @@
 const { client } = require('../database/conection');
+const logger = require('../helpers/logger');
 
 const deleteChunks = async (idpdf) => {
     try {
@@ -14,7 +15,7 @@ const deleteChunks = async (idpdf) => {
 
         return { correct: true, error: null };
     } catch (error) {
-        console.log("Error eliminando los chunks:", error);
+        logger.logError(error, { context: 'deleteChunks' });
         return { correct: false, error };
     }
 };
@@ -27,7 +28,7 @@ const deleteMetadata = async (numero, anio, numerotramite) => {
 
         return { correct: true, error: null };
     } catch (error) {
-        console.log("Error eliminando metadata:", error);
+        logger.logError(error, { context: 'deleteMetadata' });
         return { correct: false, error };
     }
 };
@@ -48,7 +49,7 @@ const deleteDocument = async (numero, anio, numerotramite, iddocumento) => {
 
         return { correct: true, error: null };
     } catch (error) {
-        console.log("Error eliminando el PDF de la base de datos:", error);
+        logger.logError(error, { context: 'deleteDocument' });
         return { correct: false, error };
     }
 };

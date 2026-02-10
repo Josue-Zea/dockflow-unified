@@ -1,5 +1,5 @@
 const { eliminarTramiteDatabase } = require("../utils/eliminarTramiteDatabase");
-const { obtenerTramitesDeExpedienteDatabase } = require("../utils/getTramitesExpediente");
+const { obtenerTramitesDeExpedienteDatabase } = require("../utils/getTramitesExpedienteDatabase");
 const { obtenerTramitePdfDatabase } = require("../utils/obtenerTramitePdfDatabase");
 const { obtenerTramitesTypeDatabase } = require("../utils/obtenerTramitesTypeDatabase");
 const { saveTramiteInDatabase } = require("../utils/saveTramiteInDatabase");
@@ -13,7 +13,8 @@ const createTramite = asyncHandler(async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Trámite creado correctamente",
-            id_tramite: result.id
+            id_tramite: result.id,
+            id_documento: result.iddocumento
         });
     } else {
         res.status(400).json({
@@ -61,7 +62,7 @@ const getTramitePdf = asyncHandler(async (req, res) => {
 });
 
 const deleteTramite = asyncHandler(async (req, res) => {
-    const { idTramite, idDocumento } = req.params;
+    const { idTramite, idDocumento } = req.query;
     const result = await eliminarTramiteDatabase(idTramite, idDocumento);
     handleDatabaseResult(res, result, {
         success: 'Trámite eliminado correctamente',

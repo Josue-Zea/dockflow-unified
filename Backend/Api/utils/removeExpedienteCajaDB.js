@@ -1,4 +1,5 @@
 const { client } = require('../database/conection');
+const logger = require('../helpers/logger');
 
 const removeExpedienteCajaDB = async (idDocumentoExpediente) => {
     try {
@@ -6,6 +7,12 @@ const removeExpedienteCajaDB = async (idDocumentoExpediente) => {
             SELECT numero, anio FROM expediente WHERE iddocumento = ? ALLOW FILTERING
         `;
         const result = await client.execute(getNumeroAnioQuery, [idDocumentoExpediente], { prepare: true });
+        if (result.rowLength === 0) {
+            return {
+                correct: false,
+                data: { message: "No se encontró el expediente" }
+            };
+        }
         const expediente = result.rows[0];
 
         const updateQuery = `
@@ -22,7 +29,7 @@ const removeExpedienteCajaDB = async (idDocumentoExpediente) => {
             error: null
         };
     } catch (error) {
-        console.error('Error al eliminar expediente:', error);
+        logger.logError(error, { context: 'removeExpedienteCajaDB' });
         return {
             correct: false,
             error: error

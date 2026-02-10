@@ -12,6 +12,13 @@ const getInfoExpedienteDatabase = async (numero, anio) => {
         }
     }
 
+    if(result.rowLength === 0) {
+        return {
+            correct: false,
+            data: { message: "No se encontró el expediente" }
+        };
+    }
+
     if(result.rows[0].idtipo === null) {
         return {
             correct: true,
@@ -22,7 +29,7 @@ const getInfoExpedienteDatabase = async (numero, anio) => {
     const queryForType =
     "SELECT * FROM tipoexpediente where id = ? ALLOW FILTERING";
     const resultTypes = await client.execute(queryForType, [result.rows[0].idtipo]);
-    
+
     if (resultTypes.hasError) {
         return {
             correct: false,
@@ -34,7 +41,7 @@ const getInfoExpedienteDatabase = async (numero, anio) => {
         ...result.rows[0],
         ...resultTypes.rows[0]
     }
-    
+
     return {
         correct: true,
         data: data

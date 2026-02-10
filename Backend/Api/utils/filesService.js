@@ -3,11 +3,12 @@ const { FILES_SERVICE_CONFIG } = require('../config/config');
 
 const FILES_ENDPOINT = `${FILES_SERVICE_CONFIG.BASE_URL}/files/document`;
 
-const saveDocumentInServer = async ({ documentName, documentType, pdfBase64 }) => {
+const saveDocumentInServer = async ({ documentName, documentType, pdfBase64, token }) => {
     const response = await fetch(FILES_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
             documentName,
@@ -24,10 +25,9 @@ const saveDocumentInServer = async ({ documentName, documentType, pdfBase64 }) =
         throw error;
     }
 
-    const payload = await response.json();
-    return payload;
+    return await response.json();
 };
 
 module.exports = {
-    saveDocumentInServer,
+    saveDocumentInServer
 };

@@ -1,7 +1,7 @@
-const { getDocumentFromDBB64 } = require("./getDocumentFromDBB64");
+const { getDocumentFromDB } = require("./getDocumentFromDB");
 
 const obtenerTramitePdfDatabase = async (idDocumento) => {
-    const document = await getDocumentFromDBB64(idDocumento);
+    const document = await getDocumentFromDB(idDocumento);
     return {
         correct: true,
         data: document

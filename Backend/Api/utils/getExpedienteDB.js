@@ -1,4 +1,5 @@
 const { client } = require("../database/conection");
+const logger = require('../helpers/logger');
 
 const getExpedienteDB = async (num_exp, anio_exp) => {
     try {
@@ -8,6 +9,7 @@ const getExpedienteDB = async (num_exp, anio_exp) => {
         if(parsedDocument.length === 0){
             return {
                 correct: false,
+                notFound: true,
                 fromRM: false,
                 data: {}
             };
@@ -18,7 +20,7 @@ const getExpedienteDB = async (num_exp, anio_exp) => {
             data: parsedDocument
         };
     }catch(e){
-        console.log("Error getExpedienteDB", e)
+        logger.logError(e, { context: 'getExpedienteDB' })
         return {
             correct: false,
             fromRM: false,

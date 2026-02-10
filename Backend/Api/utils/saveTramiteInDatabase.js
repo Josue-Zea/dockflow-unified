@@ -1,35 +1,6 @@
 const { createUUID, client } = require('../database/conection');
-
-const splitPdf = (base64Data, chunkSize = 1024 * 1024) => {
-    return new Promise((resolve, reject) => {
-        try {
-            // Decodificar el base64 a un buffer
-            const data = Buffer.from(base64Data, 'base64');
-
-            // Obtener el tamaño total del archivo
-            const fileSize = data.length;
-
-            // Calcular el número total de pedazos
-            const totalChunks = Math.ceil(fileSize / chunkSize);
-
-            // Array para almacenar los pedazos del archivo
-            const fileChunks = [];
-
-            // Dividir el archivo en pedazos de 1MB y guardarlos en el array
-            for (let i = 0; i < totalChunks; i++) {
-                const start = i * chunkSize;
-                const end = (i + 1) * chunkSize;
-                const chunk = data.slice(start, end);
-                fileChunks.push(chunk);
-            }
-
-            // Resolver la promesa con el array de pedazos
-            resolve(fileChunks);
-        } catch (err) {
-            reject(err);
-        }
-    });
-}
+const { saveChunkedPdf } = require('./pdfUtils');
+const logger = require('../helpers/logger');
 
 const saveTramite = async (id, iddocumento, nombre, fecha, tipotramite, iddocumentoPadre) => {
     try {
@@ -42,41 +13,24 @@ const saveTramite = async (id, iddocumento, nombre, fecha, tipotramite, iddocume
         return {
             correct: true,
             id,
-            error: null
+            iddocumento,
+            error: false
         }
     } catch (error) {
-        console.log(error)
+        logger.logError(error, { context: 'saveTramite' });
         return {
             correct: false,
             error: error,
+            iddocumento: null,
             id: null
         }
     }
 }
 
-const saveChunk = async (id, chunk_number, chunk) => {
-    await client.execute(
-        "INSERT INTO Documento (IDDocumento, NumeroParte, Data) VALUES (?, ?, ?)",
-        [id, chunk_number, chunk],
-        { prepare: true }
-    );
-}
-
 const saveTramiteInDatabase = async (iddocumentoexpediente, pdfBase64, nombre, fecha, tipotramite) => {
     const iddocumento = await createUUID()
-
-    // Divide el PDF en pedazos de 1 MB.
-    const chunks = await splitPdf(pdfBase64);
-
-    // Generamos el id del nuevo pdf
     const id = await createUUID();
-
-    // Guarda los pedazos del PDF en la tabla de datos.
-    for (let i = 0; i < chunks.length; i++) {
-        await saveChunk(id, i + 1, chunks[i]);
-    }
-
-    // Guarda los metadatos del PDF en la tabla de metadatos.
+    await saveChunkedPdf(id, pdfBase64);
     return await saveTramite(id, iddocumento, nombre, fecha, tipotramite, iddocumentoexpediente);
 }
 

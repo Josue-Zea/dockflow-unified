@@ -2,13 +2,6 @@ const fs = require('fs/promises');
 const path = require('path');
 const { FILES_CONFIG } = require('../config/config');
 
-// Keep filename as provided. If missing extension, leave it as-is.
-const ensureHasExtension = (name) => {
-  if (!name || typeof name !== 'string') return name;
-  const hasDot = /\.[^./\\]+$/.test(name);
-  return hasDot ? name : name; // do not force any extension
-};
-
 const sanitizeSegment = (segment = '') => segment
   .replace(/\\/g, '')
   .replace(/\//g, '')
@@ -59,7 +52,7 @@ const buildFilePath = (documentType, documentName) => {
     throw new Error('INVALID_FOLDER');
   }
 
-  const safeFileName = sanitizeFileName(ensureHasExtension(documentName));
+  const safeFileName = sanitizeFileName(documentName);
   if (!safeFileName) {
     throw new Error('INVALID_FILENAME');
   }
@@ -118,28 +111,25 @@ const saveDocument = async (req, res) => {
 
 const deleteDocument = async (req, res) => {
   try {
-    const { documentName, documentType } = req.params || {};
+    const { filePath } = req.query || {};
 
-    if (!documentName || !documentType) {
+    if (!filePath) {
       return res.status(400).json({
-        message: 'documentName y documentType son obligatorios',
+        message: 'El parámetro filePath es obligatorio',
       });
     }
 
-    let filePath;
-    try {
-      ({ filePath } = buildFilePath(documentType, documentName));
-    } catch (pathError) {
-      if (pathError.message === 'INVALID_FOLDER' || pathError.message === 'INVALID_FILENAME') {
-        return res.status(400).json({
-          message: 'Nombre de documento o tipo inválido',
-        });
-      }
-      throw pathError;
+    // Validar que la ruta esté dentro del BASE_PATH
+    const resolvedPath = path.resolve(filePath);
+    const basePath = path.resolve(FILES_CONFIG.BASE_PATH);
+    if (!resolvedPath.startsWith(basePath)) {
+      return res.status(403).json({
+        message: 'Acceso denegado: la ruta solicitada está fuera del directorio permitido',
+      });
     }
 
     try {
-      await fs.unlink(filePath);
+      await fs.unlink(resolvedPath);
     } catch (fileError) {
       if (fileError.code === 'ENOENT') {
         return res.status(404).json({
@@ -162,29 +152,26 @@ const deleteDocument = async (req, res) => {
 
 const getDocument = async (req, res) => {
   try {
-    const { documentName, documentType } = req.params || {};
+    const { filePath } = req.query || {};
 
-    if (!documentName || !documentType) {
+    if (!filePath) {
       return res.status(400).json({
-        message: 'documentName y documentType son obligatorios',
+        message: 'El parámetro filePath es obligatorio',
       });
     }
 
-    let filePath;
-    try {
-      ({ filePath } = buildFilePath(documentType, documentName));
-    } catch (pathError) {
-      if (pathError.message === 'INVALID_FOLDER' || pathError.message === 'INVALID_FILENAME') {
-        return res.status(400).json({
-          message: 'Nombre de documento o tipo inválido',
-        });
-      }
-      throw pathError;
+    // Validar que la ruta esté dentro del BASE_PATH
+    const resolvedPath = path.resolve(filePath);
+    const basePath = path.resolve(FILES_CONFIG.BASE_PATH);
+    if (!resolvedPath.startsWith(basePath)) {
+      return res.status(403).json({
+        message: 'Acceso denegado: la ruta solicitada está fuera del directorio permitido',
+      });
     }
 
     let buffer;
     try {
-      buffer = await fs.readFile(filePath);
+      buffer = await fs.readFile(resolvedPath);
     } catch (fileError) {
       if (fileError.code === 'ENOENT') {
         return res.status(404).json({
@@ -194,11 +181,12 @@ const getDocument = async (req, res) => {
       throw fileError;
     }
 
+    const fileName = path.basename(resolvedPath);
+
     return res.status(200).json({
-      documentName: sanitizeFileName(ensureHasExtension(documentName)),
-      documentType: sanitizeSegment(documentType),
+      documentName: fileName,
       fileBase64: buffer.toString('base64'),
-      absolutePath: filePath,
+      absolutePath: resolvedPath,
     });
   } catch (error) {
     console.error('Error al obtener el documento:', error);

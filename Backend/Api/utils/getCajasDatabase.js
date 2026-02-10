@@ -1,11 +1,11 @@
 const { client } = require("../database/conection");
 
-const getCajasDatabase = async (idEstante) => {
+const getCajasDatabase = async (idCaja) => {
     let result;
-    if (idEstante) {
+    if (idCaja) {
         const query =
-            "SELECT * FROM caja where idestante = ? ALLOW FILTERING";
-        result = await client.execute(query, [idEstante]);
+            "SELECT * FROM caja where id = ? ALLOW FILTERING";
+        result = await client.execute(query, [idCaja]);
     } else {
         const query =
             "SELECT * FROM caja";

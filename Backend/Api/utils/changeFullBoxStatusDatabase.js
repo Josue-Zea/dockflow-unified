@@ -12,7 +12,7 @@ const changeFullBoxStatusDatabase = async (idCaja, status) => {
     }
     return {
         correct: true,
-        data: result
+        data: { idCaja, status}
     };
 }
 

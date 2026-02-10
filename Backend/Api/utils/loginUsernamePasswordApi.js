@@ -22,19 +22,11 @@ const loginUsernamePasswordApi = async (user, psw) => {
     const uuidUsuario = uuid.stringify(foundUser.id.buffer);
     const isHash = typeof storedPassword === "string" && storedPassword.startsWith("$2");
 
-    let passwordMatches = false;
-    if (isHash) {
-        passwordMatches = await bcrypt.compare(psw, storedPassword);
-    } else {
-        passwordMatches = storedPassword === psw;
-
-        if (passwordMatches) {
-            // Promote legacy plaintext credentials to bcrypt on first successful login
-            const hashedPassword = await bcrypt.hash(psw, SALT_ROUNDS);
-            await persistPasswordHash(uuidUsuario, hashedPassword);
-            foundUser.contrasenia = hashedPassword;
-        }
+    if (!isHash) {
+        return { correct: false, data: {} };
     }
+
+    const passwordMatches = await bcrypt.compare(psw, storedPassword);
 
     if (!passwordMatches) return { correct: false, data: {} };
 
@@ -81,15 +73,6 @@ const getPermissionsUser = async (uuidTipoUsuario) => {
         throw new Error(result.error);
     }
     return result.first();
-}
-
-const persistPasswordHash = async (uuidUsuario, hashedPassword) => {
-    const query = "UPDATE Usuario SET contrasenia = ? WHERE id = ?";
-    const result = await client.execute(query, [hashedPassword, uuidUsuario]);
-
-    if (result.hasError) {
-        throw new Error(result.error);
-    }
 }
 
 module.exports = {

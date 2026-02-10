@@ -11,7 +11,7 @@ const createEstanteDatabase = async (nombre, ejex, ejey, ejez, alto, ancho) => {
     }
     return {
         correct: true,
-        data: result
+        data: { id: uuidEstante }
     };
 }
 

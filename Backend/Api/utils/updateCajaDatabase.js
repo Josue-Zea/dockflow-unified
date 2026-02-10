@@ -12,7 +12,7 @@ const updateCajaDatabase = async (idCaja, idEstante, nombre) => {
     }
     return {
         correct: true,
-        data: result
+        data: { idCaja, idEstante, nombre },
     };
 }
 

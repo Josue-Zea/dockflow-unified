@@ -1,4 +1,5 @@
 const { client } = require("../database/conection");
+const logger = require('../helpers/logger');
 
 const queryToDb = async (query) => {
     const result = await client.execute(query, []);
@@ -18,7 +19,7 @@ const getTiposExpedienteDB = async () => {
             data: result
         };
     }catch(e){
-        console.log(e);
+        logger.logError(e, { context: 'getTiposExpediente' });
         return {
             correct: false,
             data: {}
@@ -34,7 +35,7 @@ const getSubtiposExpedienteDB = async () => {
             data: result
         };
     }catch(e){
-        console.log(e);
+        logger.logError(e, { context: 'getTiposExpediente' });
         return {
             correct: false,
             data: {}
