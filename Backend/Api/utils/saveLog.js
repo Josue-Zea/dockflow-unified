@@ -1,32 +1,40 @@
 const { createUUID, client } = require("../database/conection");
-const { getPayloadToken } = require("../helpers/getPayloadToken");
 const logger = require('../helpers/logger');
 
-const saveLog = async (login, operacion, descripcion, request) => {
-    const consulta = login ? "INSERT INTO Bitacora (Id, Fecha, Operacion, Descripcion) VALUES (?, ?, ?, ?)"
-                    : " Bitacora (Id, Fecha, IDUsuario, Operacion, Descripcion) VALUES (?, ?, ?, ?, ?)";
-    const uuidUsuario = await createUUID();
-    const operation = JSON.stringify(operacion);
-    const description = JSON.stringify(descripcion);
-    let payload;
-    if(!login){ // A ejecutarse solo cuando no es login, osea existe token
-        const token = request.headers.authorization.split(" ").pop();
-        payload = getPayloadToken(token);
+const QUERY = "INSERT INTO Bitacora (Id, Fecha, IDUsuario, Operacion, Descripcion) VALUES (?, ?, ?, ?, ?)";
+const QUERY_NO_USER = "INSERT INTO Bitacora (Id, Fecha, Operacion, Descripcion) VALUES (?, ?, ?, ?)";
+
+/**
+ * Inserta un registro en la tabla Bitacora de forma fire-and-forget.
+ * No lanza errores — los captura internamente y los loguea con winston.
+ */
+const saveAuditLog = (userId, operacion, descripcion) => {
+    createUUID()
+        .then((id) => {
+            const hasUser = userId != null;
+            const query = hasUser ? QUERY : QUERY_NO_USER;
+            const values = hasUser
+                ? [id, new Date(), userId, operacion, descripcion]
+                : [id, new Date(), operacion, descripcion];
+            return client.execute(query, values, { prepare: true });
+        })
+        .catch((err) => {
+            logger.logError(err, { context: 'saveAuditLog', table: 'Bitacora' });
+        });
+};
+
+/**
+ * Compatibilidad con la interfaz anterior: saveLog(login, operacion, descripcion, request)
+ */
+const saveLog = (login, operacion, descripcion, request) => {
+    let userId = null;
+    if (!login && request && request.user) {
+        userId = request.user.id;
     }
-    const values = login ? [uuidUsuario, new Date(), operation, description]
-                    : [uuidUsuario, new Date(), payload.id, operation, description];
-    try {
-        // Utilizar async/await para realizar la consulta
-        await client.execute(
-            consulta,
-            values,
-            { prepare: true }
-        );
-    } catch (err) {
-        logger.logError(err, { context: 'saveLog', table: 'Bitacora' });
-    }
-}
+    saveAuditLog(userId, JSON.stringify(operacion), JSON.stringify(descripcion));
+};
 
 module.exports = {
-    saveLog
-}
+    saveLog,
+    saveAuditLog,
+};

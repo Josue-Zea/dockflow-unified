@@ -15,6 +15,7 @@ const saveDocumentInServer = async ({ documentName, documentType, pdfBase64, tok
             documentType,
             pdfBase64,
         }),
+        timeout: 30000,
     });
 
     if (!response.ok) {

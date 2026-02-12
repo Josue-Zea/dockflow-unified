@@ -19,7 +19,14 @@ const cargarArchivo = asyncHandler(async (req, res) => {
         let serverResponse = {};
         try {
             if (guardarservidor) {
-                const token = req.headers.authorization.split(' ')[1];
+                const authHeader = req.headers.authorization;
+                if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                    return res.status(401).json({
+                        success: false,
+                        message: "Token de autorización no proporcionado",
+                    });
+                }
+                const token = authHeader.split(' ')[1];
                 serverResponse = await saveDocumentInServer({
                     documentName: result.id,
                     documentType: tipotramite,

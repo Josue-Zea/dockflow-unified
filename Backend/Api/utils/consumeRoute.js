@@ -7,13 +7,14 @@ const fetchRoute = async (method, body, endpoint) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            timeout: 15000,
         };
         if (method !== 'GET' && method !== 'DELETE') {
             opciones.body = JSON.stringify(body);
         }
 
         const response = await fetch(endpoint, opciones);
-        if (response.ok) { //Algun error
+        if (response.ok) {
             code = 200;
             data = await response.json();
         } else {

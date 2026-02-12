@@ -37,7 +37,14 @@ const createSubDocumento = asyncHandler(async (req, res) => {
             const documentName = nombrePdf || `${result.id}.pdf`;
             const documentType = nombretiposubdocumento || tiposubdocumento;
 
-            const token = req.headers.authorization.split(' ')[1];
+            const authHeader = req.headers.authorization;
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Token de autorización no proporcionado",
+                });
+            }
+            const token = authHeader.split(' ')[1];
             const serverResponse = await saveDocumentInServer({
                 documentName,
                 documentType,

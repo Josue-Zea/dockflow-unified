@@ -14,6 +14,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const { client } = require("./database/conection");
 const { healthCheckWindowsServer } = require("./utils/healthCheckWindowsServer");
 const { apiLimiter } = require("./middleware/rateLimiter");
+const { auditLog } = require("./middleware/auditLog");
 
 // Middlewares
 app.use(helmet());
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(apiLimiter);
 app.use(express.json({limit: '100mb'}));
 app.use(express.urlencoded({limit: '100mb', extended: true }));
+app.use(auditLog);
 app.use('/auth', require('./routes/auth.routes'));
 app.use('/permisos', require('./routes/permissions.routes'));
 app.use('/expedientes', require('./routes/expediente.routes'));
